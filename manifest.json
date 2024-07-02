@@ -1,0 +1,11 @@
+{
+  "manifest_version": 3,
+  "name": "Click to run",
+  "description": "Runs a script when the user clicks the action toolbar icon.",
+  "version": "1.0",
+  "background": {
+    "service_worker": "service-worker.js"
+  },
+  "action": {},
+  "permissions": ["scripting", "activeTab"]
+}
