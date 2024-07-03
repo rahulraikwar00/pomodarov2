@@ -23,7 +23,7 @@ lofiloop.loop = true;
 const toggelsoundbtn = document.getElementById("music");
 
 toggelsoundbtn.addEventListener("click", () => {
-  toggelsoundbtn.textContent = lofiloop.paused ? "off" : "on";
+  toggelsoundbtn.textContent = lofiloop.paused ? "on" : "off";
   if (lofiloop.paused) {
     loopLofiSound(lofiloop);
   } else {
