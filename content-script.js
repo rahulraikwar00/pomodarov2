@@ -1,16 +1,33 @@
 const canvas = document.createElement("canvas");
 canvas.id = "canvas2";
 canvas.style.position = "fixed";
-canvas.style.top = "0";
+canvas.style.bottom = "0";
 canvas.style.left = "0";
 canvas.style.width = "100vw";
-canvas.style.height = "100vh";
+canvas.style.height = "6vh";
 canvas.style.backgroundColor = "transparent";
+// canvas.style.opacity = "";
 canvas.style.zIndex = "9999999999";
 canvas.style.pointerEvents = "none";
 document.body.appendChild(canvas);
 
+// Adjust the canvas dimensions to match the CSS dimensions
+const vw = Math.max(
+  document.documentElement.clientWidth || 0,
+  window.innerWidth || 0
+);
+const vh = Math.max(
+  document.documentElement.clientHeight || 0,
+  window.innerHeight || 0
+);
+
+canvas.width = vw; // Set the canvas width to match viewport width
+canvas.height = vh * 0.08;
+
+console.log("cavas", canvas.width, canvas.height);
+
 const ctx = canvas.getContext("2d");
+ctx.imageSmoothingEnabled = false;
 
 const spritesheet = new Image();
 spritesheet.src = chrome.runtime.getURL("images/walkpng.png");
@@ -18,7 +35,7 @@ spritesheet.src = chrome.runtime.getURL("images/walkpng.png");
 const finishImage = new Image();
 finishImage.src = chrome.runtime.getURL("images/finish.png");
 
-const targetTime = 10;
+const targetTime = 100;
 const animation = new Animation(
   canvas,
   ctx,
@@ -86,3 +103,6 @@ function stopAnimation() {
 function resetAnimation() {
   animation.reset();
 }
+
+celebratesound.loop = true;
+celebratesound.play();
