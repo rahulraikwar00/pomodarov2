@@ -1,19 +1,24 @@
-const startButton = document.getElementById("msgsend");
-const backgroundtext = document.getElementById("textHere");
+const startButton = document.getElementById("startbutton");
 const commingfromcontext = document.getElementById("commingfromcontext");
 
-startButton.addEventListener("click", () => {
-  chrome.runtime.sendMessage({ Message: "send from popup" }, (response) => {
-    backgroundtext.innerText = response.Message;
+const sendMessageToCurrentTab = (message) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { Message: message }, () => {});
   });
+};
+
+const updateContext = (response) => {
+  commingfromcontext.innerText = response.Message;
+};
+
+startButton.addEventListener("click", () => {
+  sendMessageToCurrentTab("start animation");
 });
 
-chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
   chrome.tabs.sendMessage(
     tabs[0].id,
-    { Message: "send from popup" },
-    function (response) {
-      commingfromcontext.innerText = response.Message;
-    }
+    { Message: "setup animation" },
+    updateContext
   );
 });
