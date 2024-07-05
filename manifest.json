@@ -24,7 +24,7 @@
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["scripting", "activeTab", "declarativeContent"],
+  "permissions": ["scripting", "activeTab", "declarativeContent", "tabs"],
   "web_accessible_resources": [
     {
       "resources": [

@@ -1,6 +1,4 @@
-console.log("service-worker.js is loaded");
-
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  console.log("Received message:", request.message);
-  sendResponse({ response: "message received from service worker" });
+  console.log("Message received in service worker:", request.Message);
+  sendResponse({ Message: "Message received send from service worker" });
 });
