@@ -1,14 +1,4 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.declarativeContent.onPageChanged.removeRules(undefined, () => {
-    chrome.declarativeContent.onPageChanged.addRules([
-      {
-        conditions: [
-          new chrome.declarativeContent.PageStateMatcher({
-            pageUrl: { hostContains: "." },
-          }),
-        ],
-        actions: [new chrome.declarativeContent.ShowPageAction()],
-      },
-    ]);
-  });
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  console.log("Message received in service worker:", request.Message);
+  sendResponse({ Message: "Message received send from service worker" });
 });

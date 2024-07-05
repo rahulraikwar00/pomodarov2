@@ -1,66 +1,24 @@
-// popup.js
+const startButton = document.getElementById("startbutton");
+const commingfromcontext = document.getElementById("commingfromcontext");
 
-// Import necessary functions and classes
-import Timer from "./timer.js";
-import { animation } from "./extention/script.js";
-// Select DOM elements
-// const startBtn = document.getElementById("startBtn");
-// const stopBtn = document.getElementById("stopBtn");
-// const breakBtn = document.getElementById("breakBtn");
-const counter = document.getElementById("timer");
+const sendMessageToCurrentTab = (message) => {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    chrome.tabs.sendMessage(tabs[0].id, { Message: message }, () => {});
+  });
+};
 
-// Set target time for timer
-const targetTime = 20; // 25 minutes in seconds
+const updateContext = (response) => {
+  commingfromcontext.innerText = response.Message;
+};
 
-// Initialize timer
-const timer = new Timer(targetTime, updateCounter, timerFinished);
+startButton.addEventListener("click", () => {
+  sendMessageToCurrentTab("start animation");
+});
 
-// Function to update timer display
-function updateCounter(minutes, seconds) {
-  counter.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
-}
-
-// Function called when timer finishes
-function timerFinished() {
-  counter.textContent = "Time's up!";
-  startBtn.style.display = "block";
-  stopBtn.style.display = "none";
-  breakBtn.style.display = "none";
-  timer.stop();
-  timer.reset();
-}
-
-// // Event listener for start button
-// startBtn.addEventListener("click", () => {
-//   startBtn.style.display = "none";
-//   stopBtn.style.display = "block";
-//   breakBtn.style.display = "block";
-//   animation.start();
-//   timer.resume();
-// });
-
-// // Event listener for stop button
-// stopBtn.addEventListener("click", () => {
-//   stopBtn.style.display = "none";
-//   startBtn.style.display = "block";
-//   breakBtn.style.display = "none";
-//   timer.stop();
-//   animation.stop();
-// });
-
-// // Event listener for break button
-// breakBtn.addEventListener("click", () => {
-//   startBtn.style.display = "none";
-//   stopBtn.style.display = "none";
-//   breakBtn.style.display = "none";
-//   timer.stop();
-//   timer.startBreak();
-// });
-
-// // Initial setup
-// startBtn.style.display = "block";
-// stopBtn.style.display = "none";
-// breakBtn.style.display = "none";
-timer.reset();
+chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+  chrome.tabs.sendMessage(
+    tabs[0].id,
+    { Message: "setup animation" },
+    updateContext
+  );
+});

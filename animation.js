@@ -1,4 +1,6 @@
-export default class Animation {
+console.log("animation.js is loaded");
+
+class Animation {
   constructor(canvas, ctx, spritesheet, finishImage, finishCallback) {
     this.canvas = canvas;
     this.ctx = ctx;
@@ -44,6 +46,7 @@ export default class Animation {
   }
 
   animate() {
+    const scaleFactor = 1;
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     const position = Math.round(this.gameFrame / this.staggerframes) % 12;
@@ -59,8 +62,8 @@ export default class Animation {
       this.spritesheet,
       this.frameX,
       this.frameY * this.spriteheight,
-      this.spritewidth,
-      this.spriteheight,
+      this.spritewidth * scaleFactor,
+      this.spriteheight * scaleFactor,
       positionX - 40,
       centerY - 50,
       50,
