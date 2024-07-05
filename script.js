@@ -1,14 +1,12 @@
-// import confetti from "https://cdn.skypack.dev/canvas-confetti";
 
-import Timer from "../timer.js";
-import Animation from "../animation.js";
-import { playSound, loopLofiSound, pauseLofiSound } from "./sound.js";
+
+console.log("script.js is loaded");
+
+let animation;
 
 const canvas = document.getElementById("canvas1");
-const ctx = canvas.getContext("2d");
 
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+const ctx = canvas.getContext("2d");
 
 const spritesheet = new Image();
 spritesheet.src = "./images/walkpng.png";
@@ -20,21 +18,19 @@ const finishSound = new Audio("./sound/celebratesound.mp3");
 const lofiloop = new Audio("./sound/lofiloop.mp3");
 lofiloop.loop = true;
 
-const toggelsoundbtn = document.getElementById("music");
+const targetTime = 22;
+// const toggelsoundbtn = document.getElementById("music");
 
-toggelsoundbtn.addEventListener("click", () => {
-  toggelsoundbtn.textContent = lofiloop.paused ? "off" : "on";
-  if (lofiloop.paused) {
-    loopLofiSound(lofiloop);
-  } else {
-    pauseLofiSound(lofiloop);
-  }
-});
+// toggelsoundbtn.addEventListener("click", () => {
+//   toggelsoundbtn.textContent = lofiloop.paused ? "off" : "on";
+//   if (lofiloop.paused) {
+//     loopLofiSound(lofiloop);
+//   } else {
+//     pauseLofiSound(lofiloop);
+//   }
+// });
 
-const targetTime = 22; // 25 minutes in seconds
-
-const timer = new Timer(targetTime, updateCounter, timerFinished);
-export const animation = new Animation(
+animation = new Animation(
   canvas,
   ctx,
   spritesheet,
@@ -43,6 +39,10 @@ export const animation = new Animation(
   finishAnimation
 );
 animation.setTargetTime(targetTime * 70);
+
+const timer = new Timer(targetTime, updateCounter, timerFinished);
+
+export { animation };
 
 const startBtn = document.getElementById("startBtn");
 const stopBtn = document.getElementById("stopBtn");

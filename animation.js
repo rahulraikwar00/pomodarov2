@@ -1,4 +1,6 @@
-export default class Animation {
+console.log("animation.js is loaded");
+
+class Animation {
   constructor(canvas, ctx, spritesheet, finishImage, finishCallback) {
     this.canvas = canvas;
     this.ctx = ctx;

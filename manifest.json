@@ -15,13 +15,25 @@
   },
 
   "background": {
-    "service_worker": "service-worker.js"
+    "service_worker": "service-worker.js",
+    "type": "module"
   },
   "content_scripts": [
     {
-      "js": ["content-script.js"],
+      "js": ["animation.js", "timer.js", "sound.js", "content-script.js"],
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["scripting", "activeTab", "declarativeContent"]
+  "permissions": ["scripting", "activeTab", "declarativeContent"],
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "images/walkpng.png",
+        "images/finish.png",
+        "sound/celebratesound.mp3",
+        "sound/lofiloop.mp3"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

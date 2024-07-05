@@ -1,4 +1,6 @@
-export default class Timer {
+console.log("timer.js is loaded");
+
+class Timer {
   constructor(targetTime, updateCallback, finishCallback) {
     this.targetTime = targetTime; // Original target time for the main countdown
     this.updateCallback = updateCallback;
