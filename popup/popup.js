@@ -12,13 +12,6 @@ function timerFinished() {
   timer.reset();
 }
 
-const timer = new Timer(
-  25 * 60,
-  (minutes, seconds) => {
-    updateCounter(minutes, seconds);
-  },
-  timerFinished
-);
 function finishAnimation() {
   document.getElementById("finish").style.display = "block";
 }
@@ -124,3 +117,11 @@ class Timer {
     return this.remainingTime > 0;
   }
 }
+
+const timer = new Timer(
+  25 * 60,
+  (minutes, seconds) => {
+    updateCounter(minutes, seconds);
+  },
+  timerFinished
+);

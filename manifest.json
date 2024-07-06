@@ -10,17 +10,22 @@
     "128": "logo/pawprint128.png"
   },
   "action": {
-    "default_popup": "popup.html",
+    "default_popup": "popup/popup.html",
     "default_icon": "logo/pawprint16.png"
   },
 
   "background": {
-    "service_worker": "service-worker.js",
+    "service_worker": "scripts/service-worker.js",
     "type": "module"
   },
   "content_scripts": [
     {
-      "js": ["animation.js", "timer.js", "sound.js", "content-script.js"],
+      "js": [
+        "scripts/animation.js",
+        "scripts/timer.js",
+        "scripts/sound.js",
+        "scripts/content-script.js"
+      ],
       "matches": ["<all_urls>"]
     }
   ],
