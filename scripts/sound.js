@@ -9,7 +9,3 @@ function loopLofiSound(sound) {
 function pauseLofiSound(sound) {
   sound.pause();
 }
-
-// export
-
-export { playSound, loopLofiSound, pauseLofiSound };
