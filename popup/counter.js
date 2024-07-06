@@ -1,4 +1,4 @@
-export default class Timer {
+export class Timer {
   constructor(targetTime, updateCallback, finishCallback) {
     this.targetTime = targetTime; // Original target time for the main countdown
     this.updateCallback = updateCallback;

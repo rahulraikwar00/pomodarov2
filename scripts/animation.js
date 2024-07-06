@@ -1,7 +1,17 @@
-export default class Animation {
-  constructor(canvas, ctx, spritesheet, finishImage, finishCallback) {
+console.log("animation.js is loaded");
+
+class Animation {
+  constructor(
+    canvas,
+    canvasforAnmiation,
+    spritesheet,
+    finishImage,
+    finishCallback
+  ) {
     this.canvas = canvas;
-    this.ctx = ctx;
+    this.canvasforAnmiation = canvasforAnmiation;
+    this.ctx = canvas.getContext("2d");
+    this.canvasforAnmiationctx = canvasforAnmiation.getContext("2d");
     this.spritesheet = spritesheet;
     this.finishImage = finishImage;
     this.finishCallback = finishCallback;
@@ -44,33 +54,41 @@ export default class Animation {
   }
 
   animate() {
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    const scaleFactor = 1;
+    this.canvasforAnmiationctx.clearRect(
+      0,
+      0,
+      this.canvasforAnmiation.width,
+      this.canvasforAnmiation.height
+    );
+    this.ctx.clearRect(0, 0, this.ctx.width, this.ctx.height);
 
     const position = Math.round(this.gameFrame / this.staggerframes) % 12;
     this.frameX = this.spritewidth * position;
     const positionX = this.spritewidth + this.distancetogoal;
 
-    const centerY = this.canvas.height;
-
+    // move the canvas to the right
+    this.canvasforAnmiation.style.left = `${positionX - this.spritewidth}px`;
     this.drawFinishImage();
     this.drawProgressBar(positionX);
 
-    this.ctx.drawImage(
+    this.canvasforAnmiationctx.drawImage(
       this.spritesheet,
       this.frameX,
       this.frameY * this.spriteheight,
-      this.spritewidth,
-      this.spriteheight,
-      positionX - 40,
-      centerY - 50,
-      50,
-      50
+      this.spritewidth * scaleFactor,
+      this.spriteheight * scaleFactor,
+      0,
+      0,
+      this.canvasforAnmiation.width,
+      this.canvasforAnmiation.height
     );
 
     if (positionX >= this.canvas.width - this.spritewidth - 45) {
       this.distancetogoal = 0;
       if (!this.hasReachedFinish) {
         this.hasReachedFinish = true;
+        this.finishCallback;
         return;
       }
     } else {

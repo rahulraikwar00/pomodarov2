@@ -1,0 +1,139 @@
+@import url("https://fonts.googleapis.com/css2?family=Margarine:wght@400;700&display=swap");
+@import url("https://use.fontawesome.com/releases/v5.15.4/css/all.css");
+
+body {
+  width: 200px;
+  height: 250px;
+  background-color: #fff;
+  font-family: "Margarine", sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Main container */
+#maindiv {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f1f1f1;
+  width: 100%;
+  height: 100%;
+  /* border-radius: 10px; */
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+}
+
+/* Timer section */
+#time {
+  font-size: 36px;
+  font-weight: 700;
+  color: #333;
+  margin: 0 0 20px;
+  text-align: center;
+  animation: fadeIn 0.5s ease-in-out both;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Timer text */
+#timer {
+  font-size: 60px;
+  color: #333;
+  animation: fadeIn 1s ease-in-out both;
+}
+
+/* Controls section */
+#controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+/* Button styling */
+#controls button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  background-color: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  font-family: "Margarine", sans-serif;
+  font-weight: 400;
+  font-style: normal;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+#controls button:hover {
+  background-color: #ccc;
+}
+
+/* Start button */
+#startbutton {
+  position: relative;
+  overflow: hidden;
+}
+
+#startbutton::before {
+  content: "\f04b";
+  font-family: "FontAwesome";
+  font-weight: 900;
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+#startbutton.paused::before {
+  content: "\f04c";
+  opacity: 1;
+}
+
+#startbutton.paused::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+
+  animation: playToPause 0.3s ease both;
+}
+
+@keyframes playToPause {
+  0% {
+    transform: scaleX(0);
+  }
+  100% {
+    transform: scaleX(3);
+  }
+}
+
+/* Pause button */
+#pausebutton {
+  display: none;
+}
+
+/* Reset button */
+#resetbutton {
+  background-color: #f44336;
+}
