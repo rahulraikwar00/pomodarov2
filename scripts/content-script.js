@@ -1,3 +1,5 @@
+console.log("content-script.js is loaded");
+
 const canvas = document.createElement("canvas");
 canvas.id = "canvas2";
 canvas.style.position = "fixed";
@@ -137,7 +139,7 @@ function resetAnimation() {
 
 function loopLofiSound(sound) {
   sound.loop = true;
-  sound.play();
+  // sound.play();
 }
 
 function pauseLofiSound(sound) {

@@ -102,7 +102,7 @@ body {
   opacity: 0;
   transition: opacity 0.3s ease;
 }
-
+/* 
 #startbutton.paused::before {
   content: "\f04c";
   opacity: 1;
@@ -124,14 +124,14 @@ body {
     transform: scaleX(0);
   }
   100% {
-    transform: scaleX(3);
+    transform: scaleX(1);
   }
 }
 
 /* Pause button */
-#pausebutton {
-  display: none;
-}
+/* #pausebutton { */
+/* display: none; */
+/* }  */
 
 /* Reset button */
 #resetbutton {

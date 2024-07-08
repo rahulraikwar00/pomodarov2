@@ -22,14 +22,19 @@
     {
       "js": [
         "scripts/animation.js",
-        "scripts/timer.js",
         "scripts/sound.js",
         "scripts/content-script.js"
       ],
       "matches": ["<all_urls>"]
     }
   ],
-  "permissions": ["scripting", "activeTab", "declarativeContent", "tabs"],
+  "permissions": [
+    "scripting",
+    "activeTab",
+    "declarativeContent",
+    "tabs",
+    "storage"
+  ],
   "web_accessible_resources": [
     {
       "resources": [

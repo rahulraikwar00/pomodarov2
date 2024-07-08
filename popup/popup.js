@@ -1,15 +1,13 @@
+console.log("popup.js is loaded");
+
 const startButton = document.getElementById("startbutton");
 const counter = document.getElementById("timer");
 let isPlaying = false;
+
 function updateCounter(minutes, seconds) {
   counter.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
     .toString()
     .padStart(2, "0")}`;
-}
-
-function timerFinished() {
-  timer.stop();
-  timer.reset();
 }
 
 function finishAnimation() {
@@ -22,15 +20,28 @@ const sendMessageToCurrentTab = (message) => {
   });
 };
 
-startButton.addEventListener("click", () => {
-  isPlaying = !isPlaying;
-  const message = isPlaying ? "start animation" : "stop animation";
-  timer.start();
-  sendMessageToCurrentTab(message);
-});
+function toggelTimer() {
+  const timerState = chrome.storage.local.get("timer");
+  if (timerState.state) {
+    chrome.storage.local.set({ timer: { state: false } });
+  } else {
+    chrome.storage.local.set({ timer: { state: true } });
+  }
+}
 
-chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-  chrome.tabs.sendMessage(tabs[0].id, { Message: "setup animation" });
+function sendMessageToBackground(message) {
+  chrome.runtime.sendMessage({ Message: message });
+}
+
+startButton.addEventListener("click", () => {
+  chrome.storage.local.set({ timer: { state: !isPlaying } });
+  isPlaying = !isPlaying;
+  const messageforanimation = isPlaying ? "start animation" : "stop animation";
+  const messagefortimer = isPlaying ? "start timer" : "stop timer";
+  toggelTimer();
+  startButton.innerText = isPlaying ? "Stop focus" : "Start focus";
+  sendMessageToCurrentTab(messageforanimation);
+  sendMessageToBackground(messagefortimer);
 });
 
 // script.js
@@ -44,84 +55,33 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-//
-//
-//
-//
-//
-
-//
-
-// timmerrrrr classs
-class Timer {
-  constructor(targetTime, updateCallback, finishCallback) {
-    this.targetTime = targetTime; // Original target time for the main countdown
-    this.updateCallback = updateCallback;
-    this.finishCallback = finishCallback;
-    this.timerInterval = null;
-    this.remainingTime = targetTime; // Initialize remainingTime to the original target time
-    this.breakTime = 5 * 60; // 5 minutes break time in seconds
-    this.isOnBreak = false;
-  }
-
-  start() {
-    this.timerInterval = setInterval(() => this.update(), 1000);
-  }
-
-  stop() {
-    clearInterval(this.timerInterval);
-  }
-
-  reset() {
-    this.stop();
-    this.remainingTime = this.targetTime; // Reset remainingTime to the original target time
-    this.updateDisplay();
-    this.isOnBreak = false;
-  }
-
-  resume() {
-    this.start();
-  }
-
-  startBreak() {
-    this.isOnBreak = true;
-    this.remainingTime = this.breakTime; // Set remainingTime to break time
-    this.stop();
-    this.updateDisplay();
-    this.timerInterval = setInterval(() => this.update(), 1000);
-  }
-
-  update() {
-    this.remainingTime--; // Decrement remainingTime
-    if (this.remainingTime < 0) {
-      this.stop();
-      if (this.isOnBreak) {
-        this.isOnBreak = false;
-        this.remainingTime = this.targetTime; // Reset to original target time after break
-        this.resume();
-      } else {
-        this.finishCallback();
-      }
-      return;
-    }
-    this.updateDisplay();
-  }
-
-  updateDisplay() {
-    const minutes = Math.floor(this.remainingTime / 60);
-    const seconds = this.remainingTime % 60;
-    this.updateCallback(minutes, seconds);
-  }
-
-  hasRemainingTime() {
-    return this.remainingTime > 0;
-  }
-}
-
-const timer = new Timer(
-  25 * 60,
-  (minutes, seconds) => {
+window.onload = function () {
+  chrome.storage.local.get("timer", function (result) {
+    const state = result.timer.state || false;
+    const counterValue = result.timer.remainingTime || 0;
+    const minutes = Math.floor(counterValue / 60);
+    const seconds = counterValue % 60;
     updateCounter(minutes, seconds);
-  },
-  timerFinished
-);
+    console.log("state", state, "counterValue", counterValue);
+  });
+};
+
+chrome.storage.local.onChanged.addListener((changes, namespace) => {
+  if (namespace === "local") {
+    if (changes.hasOwnProperty("timer")) {
+      const initialTimer = changes.timer.remainingTime;
+    }
+  }
+});
+
+setInterval(() => {
+  chrome.storage.local.get("timer", (result) => {
+    const minutes = Math.floor(result.timer.remainingTime / 60);
+    const seconds = result.timer.remainingTime % 60;
+    updateCounter(minutes, seconds);
+
+    if (result.timer.remainingTime === 0) {
+      finishAnimation();
+    }
+  });
+}, 1000);
