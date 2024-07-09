@@ -56,7 +56,20 @@ const finishSound = new Audio(
 );
 const lofiloop = new Audio(chrome.runtime.getURL("sound/lofiloop.mp3"));
 
-const targetTime = 2 * 60;
+const targetTime = 25 * 60;
+chrome.storage.local
+  .get("storageVariables")
+  .then((result) => {
+    const storageVariables = result.storageVariables || {};
+    const targetTime = storageVariables.timer?.targetTime;
+
+    if (targetTime) {
+      console.log("targetTime", targetTime);
+    }
+  })
+  .catch((error) => {
+    console.error("Error retrieving storage:", error);
+  });
 
 const animation = new Animation(
   canvas,
@@ -92,25 +105,63 @@ Promise.all([
     console.error("Failed to load resources:", error);
   });
 
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   console.log("Message comming for animation:", request.Message);
+//   if (request.animation.state === "setup") {
+//     setupAnimation();
+//     sendResponse({ Message: "set up successfull" });
+//   } else if (request.animation.state === "start") {
+//     setupAnimation();
+//     startAnimation();
+//     loopLofiSound(lofiloop);
+//     sendResponse({ Message: "animation started" });
+//   } else if (request.animation.state === "stop") {
+//     stopAnimation();
+//     sendResponse({ Message: "animation stopped" });
+//   } else if (request.animation.state === "reset") {
+//     resetAnimation();
+//     sendResponse({ Message: "animation reset" });
+//   } else {
+//     sendResponse({
+//       Message: "not setup beacuse Message has not been recognised",
+//     });
+//   }
+//   return true;
+// });
+
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.Message === "setup animation") {
-    setupAnimation();
-    sendResponse({ Message: "set up successfull" });
-  } else if (request.Message === "start animation") {
-    startAnimation();
-    loopLofiSound(lofiloop);
-    sendResponse({ Message: "animation started" });
-  } else if (request.Message === "stop animation") {
-    stopAnimation();
-    sendResponse({ Message: "animation stopped" });
-  } else if (request.Message === "reset animation") {
-    resetAnimation();
-    sendResponse({ Message: "animation reset" });
+  console.log("Message coming for animation:", request.animation.state);
+
+  const actions = {
+    setup: () => {
+      setupAnimation();
+      sendResponse({ message: "Setup successful" });
+    },
+    start: () => {
+      setupAnimation();
+      startAnimation();
+      loopLofiSound(lofiloop);
+      sendResponse({ message: "Animation started" });
+    },
+    stop: () => {
+      stopAnimation();
+      sendResponse({ message: "Animation stopped" });
+    },
+    reset: () => {
+      resetAnimation();
+      sendResponse({ message: "Animation reset" });
+    },
+  };
+
+  if (actions[request.animation.state]) {
+    actions[request.animation.state]();
   } else {
-    sendResponse({ Message: "not setup" });
+    sendResponse({
+      message: "Not setup because the message has not been recognized",
+    });
   }
-  console.log("Message:", request.Message);
-  return true;
+
+  return true; // Keep the message channel open for async sendResponse
 });
 
 function finishAnimation() {
@@ -121,6 +172,7 @@ function finishAnimation() {
 }
 
 function setupAnimation() {
+  console.log("taget time has been set to", targetTime);
   animation.setTargetTime(targetTime * 70);
   animation.stop();
 }
