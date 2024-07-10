@@ -23,10 +23,10 @@ body {
 
 #title {
   position: relative;
-  align-self: first baseline;
+  /* align-self: first baseline; */
   font-size: 16px;
   margin-top: 10px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
 
   /* Adjusted for smaller width */
   /* margin: 5px 5px; Adjusted spacing */
@@ -82,4 +82,6 @@ body {
   right: 0;
   bottom: 0;
   z-index: -99;
+  filter: blur(1px);
+  /* opacity: 0.6; */
 }

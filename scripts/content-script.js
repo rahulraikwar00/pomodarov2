@@ -9,7 +9,7 @@ canvas.style.width = "100vw";
 canvas.style.height = "50px";
 canvas.style.backgroundColor = "transparent";
 // canvas.style.opacity = "0.4";
-canvas.style.zIndex = "9999997999";
+canvas.style.zIndex = "99";
 canvas.style.pointerEvents = "none";
 
 const canvasforAnmiation = document.createElement("canvas");
@@ -20,8 +20,8 @@ canvasforAnmiation.style.left = "0";
 canvasforAnmiation.style.width = "50px";
 canvasforAnmiation.style.height = "50px";
 canvasforAnmiation.style.backgroundColor = "transparent";
-// canvasforAnmiation.style.opacity = "";
-canvasforAnmiation.style.zIndex = "9999999999";
+// canvasforAnmiation.style.opacity = "";/home/mthead/coding/pesonal-project/aniamtion/scripts
+canvasforAnmiation.style.zIndex = "999";
 canvasforAnmiation.style.pointerEvents = "none";
 
 document.body.appendChild(canvas);
