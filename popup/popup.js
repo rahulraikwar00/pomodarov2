@@ -1,13 +1,21 @@
 console.log("popup.js is loaded");
 
 const startButton = document.getElementById("startbutton");
+const resetbutton = document.getElementById("resetbutton");
 const counter = document.getElementById("timer");
 let isPlaying = false;
 
-function updateCounter(minutes, seconds) {
-  counter.textContent = `${minutes.toString().padStart(2, "0")}:${seconds
-    .toString()
-    .padStart(2, "0")}`;
+function updateCounter() {
+  chrome.storage.local.get("timer", (result) => {
+    const minutes = Math.floor(result.timer / 60);
+    const seconds = result.timer % 60;
+
+    console.log("minutes", minutes, "seconds", seconds);
+    const timeSting = `${minutes.toString().padStart(2, "0")}:${seconds
+      .toString()
+      .padStart(2, "0")}`;
+    counter.textContent = timeSting;
+  });
 }
 
 function finishAnimation() {
@@ -21,86 +29,38 @@ const sendMessageToCurrentTab = (message) => {
   });
 };
 
-async function toggleTimer() {
-  const timerState = await chrome.storage.local.get("storageVariables");
-  const state = timerState.timer ? timerState.timer.state : false;
-  chrome.storage.local.set({ timer: { state: !state } });
-}
-
 function sendMessageToBackground(message) {
   chrome.runtime.sendMessage(message, () => {
     console.log("message sent to background");
   });
 }
 
-async function updateDisplay() {
-  const timerState = await chrome.storage.local.get("timer");
-  const minutes = Math.floor(timerState.timer.remainingTime / 60);
-  const seconds = timerState.timer.remainingTime % 60;
-  updateCounter(minutes, seconds);
-}
-
 startButton.addEventListener("click", () => {
-  chrome.storage.local.set({
-    storageVariables: { timer: { isOnBreak: false, state: !isPlaying } },
+  console.log("clcicked");
+  chrome.storage.local.get("isRunning", (result) => {
+    chrome.storage.local.set({ isRunning: !result.isRunning }, () => {
+      startButton.innerText = !result.isRunning ? "Stop focus" : "Start focus";
+    });
   });
-  isPlaying = !isPlaying;
-  const messageforanimation = isPlaying ? "start" : "stop";
-  const messagefortimer = isPlaying ? "start" : "stop";
-  toggleTimer();
-  startButton.innerText = isPlaying ? "Stop focus" : "Start focus";
-  sendMessageToCurrentTab({ animation: { state: messageforanimation } });
-  sendMessageToBackground({ timer: { state: messagefortimer } });
 });
 
-// script.js
-document.addEventListener("DOMContentLoaded", function () {
-  var soundElements = document.querySelectorAll(".sound");
-
-  soundElements.forEach(function (soundElement) {
-    soundElement.addEventListener("click", function () {
-      this.classList.toggle("sound-mute");
-    });
+resetbutton.addEventListener("click", () => {
+  chrome.storage.local.set({ timer: 25 * 60, isRunning: false }, () => {
+    startButton.innerText = "Start focus";
+    console.log("Timer reset to 0");
   });
 });
 
 window.onload = async function () {
-  const result = await chrome.storage.local.get("storageVariables");
-  console.log("result on load", result);
-  const state = result.storageVariables?.timer?.state || false;
-  const counterValue = result.storageVariables?.timer?.remainingTime || 0;
-  const minutes = Math.floor(counterValue / 60);
-  const seconds = counterValue % 60;
-  updateCounter(minutes, seconds);
-  console.log("state", state, "counterValue", counterValue);
+  updateCounter();
 };
 
-chrome.storage.local.onChanged.addListener((changes, namespace) => {
-  if (namespace === "local") {
-    if (changes.hasOwnProperty("storageVariables")) {
-      const initialTimer = changes.storageVariables.timer.remainingTime;
-    }
-  }
-});
-
-chrome.action.onClicked.addListener(() => {
-  setupAnimation();
-  setInterval(() => {
-    chrome.storage.local.get("storageVaribales", (result) => {
-      console.log("result in setInterval", result);
-      const minutes = Math.floor(result.timer.remainingTime / 60);
-      const seconds = result.timer.remainingTime % 60;
-      updateCounter(minutes, seconds);
-
-      if (result.timer.remainingTime === 0) {
-        finishAnimation();
-      }
-    });
-  }, 1000);
-});
+updateCounter();
+setInterval(() => {
+  updateCounter();
+}, 1000);
 
 function setupAnimation() {
   sendMessageToCurrentTab({ animation: { state: "setup" } });
-  // clear the setInterval
   clearInterval(timerInterval);
 }
