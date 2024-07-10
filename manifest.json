@@ -33,13 +33,15 @@
     "activeTab",
     "declarativeContent",
     "tabs",
-    "storage"
+    "storage",
+    "alarms"
   ],
   "web_accessible_resources": [
     {
       "resources": [
         "images/walkpng.png",
         "images/finish.png",
+        "images/girl.gif",
         "sound/celebratesound.mp3",
         "sound/lofiloop.mp3"
       ],
