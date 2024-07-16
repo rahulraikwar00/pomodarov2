@@ -20,6 +20,7 @@
 .history
 *.log
 
-# secrets
-secrets.*.js
->>>>>>> 36b0867 (adding gitignore)
+.editorconfig
+.npmignore
+.prettierignore
+.prettierrc
