@@ -61,8 +61,8 @@ body {
   transform: scale(1.05);
 }
 
-/* #app {
-  background-image: url('img/girl.gif');
+#app {
+  background-image: var(--background);
   background-size: cover;
   background-position: center;
   width: 100%;
@@ -72,7 +72,7 @@ body {
   left: 0;
   z-index: -99;
   filter: blur(1px);
-} */
+}
 
 @keyframes fadeIn {
   0% {
