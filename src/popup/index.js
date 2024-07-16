@@ -1,36 +1,43 @@
 import './index.css'
-import { hasOffscreenDocument, toggleSoundtext, createOffscreenDocument } from '../utills'
+import { hasOffscreenDocument, localStorage, createOffscreenDocument } from '../utills'
 
-document.addEventListener('DOMContentLoaded', () => {
+// Initialize background music control
+const initBackgroundMusic = () => {
   const backgroundMusic = document.getElementById('backgroundMusic')
-  const app = document.getElementById('app')
-  const path = 'offscreen.html'
 
-  // Setting the background image (gif)
-  app.style.setProperty('--background', `url(${chrome.runtime.getURL('img/girl.gif')})`)
+  // Set the initial state of the background music from localStorage
+  localStorage.get('sound', (result) => {
+    backgroundMusic.innerText = result.sound.state ? 'pause' : 'play'
+  })
 
-  backgroundMusic.addEventListener('click', async () => {
+  // Toggle play/pause state and update localStorage
+  const togglePlayState = async () => {
     try {
+      const path = 'offscreen.html'
       let offscreenAvailable = await hasOffscreenDocument(path)
-      console.log('Offscreen document status:', offscreenAvailable)
 
       if (!offscreenAvailable) {
-        console.log('Offscreen document not available, creating one.')
         await createOffscreenDocument(path, 'AUDIO_PLAYBACK', 'Background music playback')
-        // Retry the action after creating the offscreen document
         offscreenAvailable = await hasOffscreenDocument(path)
       }
 
       if (offscreenAvailable) {
-        if (backgroundMusic.innerText === 'play') {
-          chrome.runtime.sendMessage('play')
-        } else {
-          chrome.runtime.sendMessage('pause')
-        }
-        toggleSoundtext()
+        const isPlaying = backgroundMusic.innerText === 'play'
+        chrome.runtime.sendMessage(isPlaying ? 'play' : 'pause')
+        backgroundMusic.innerText = isPlaying ? 'pause' : 'play'
+        localStorage.set({ sound: { state: isPlaying } })
       }
     } catch (error) {
       console.error('Error handling background music:', error)
     }
-  })
+  }
+
+  backgroundMusic.addEventListener('click', togglePlayState)
+}
+
+// Apply initial UI settings and setup background music control
+document.addEventListener('DOMContentLoaded', () => {
+  const app = document.getElementById('app')
+  app.style.setProperty('--background', `url(${chrome.runtime.getURL('img/girl.gif')})`)
+  initBackgroundMusic()
 })

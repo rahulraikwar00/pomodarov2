@@ -30,6 +30,7 @@ export function toggleSoundtext() {
   const backgroundMusic = document.getElementById('backgroundMusic')
   if (backgroundMusic) {
     backgroundMusic.innerText = backgroundMusic.innerText === 'play' ? 'pause' : 'play'
+    localStorage.set({ sound: { state: backgroundMusic.innerText === 'play' } })
   } else {
     console.error('Element with id "backgroundMusic" not found.')
   }
@@ -40,7 +41,7 @@ export function toggleSoundtext() {
 // #################################################################
 export const localStorage = {
   get: (key, callback) => {
-    chrome.storage.sync.get(key, (result) => {
+    chrome.storage.local.get(key, (result) => {
       if (chrome.runtime.lastError) {
         console.error('Error retrieving data:', chrome.runtime.lastError)
       } else {
@@ -49,7 +50,7 @@ export const localStorage = {
     })
   },
   set: (configs, callback) => {
-    chrome.storage.sync.set(configs, () => {
+    chrome.storage.local.set(configs, () => {
       if (chrome.runtime.lastError) {
         console.error('Error setting data:', chrome.runtime.lastError)
       } else if (callback) {
@@ -59,11 +60,34 @@ export const localStorage = {
   },
   listen: (callback) => {
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === 'sync') {
+      if (areaName === 'local') {
         callback(changes)
       }
     })
   },
+}
+
+export function setupStorageConfig() {
+  const configs = {
+    timer: {
+      duration: 1500,
+      time: 1500,
+      mode: 'pomoji',
+      state: 'stop',
+    },
+    animation: {
+      state: false,
+      position: {
+        x: 0,
+        y: 0,
+      },
+    },
+    sound: {
+      state: false,
+      filename: '',
+    },
+  }
+  return configs
 }
 
 // ###############################################################
