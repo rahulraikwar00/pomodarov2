@@ -21,3 +21,8 @@
 
 # secrets
 secrets.*.js
+
+.editorconfig
+.npmignore
+.prettierignore
+.prettierrc
