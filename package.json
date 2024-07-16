@@ -1,9 +1,9 @@
 {
-  "name": "my-crx",
-  "displayName": "my-crx",
-  "version": "0.0.0",
-  "author": "no one",
-  "description": "",
+  "name": "pomoji",
+  "displayName": "Pomoji: Pomodoro and Focus Timer with Animated Buddy",
+  "version": "0.0.2",
+  "author": "Rahul Raikwar <rr200636@gmail.com> (https://github.com/rahulraikwar00) <https://github.com/rahulraikwar00>",
+  "description": "A Pomodoro and focus timer with an animated buddy walking at the bottom of the tab to enhance your focus.",
   "type": "module",
   "license": "MIT",
   "keywords": [
