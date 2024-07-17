@@ -1,18 +1,6 @@
-console.log('background is running')
-
 import { createOffscreenDocument, setupStorageConfig, localStorage } from '../utills'
+chrome.runtime.onInstalled.addListener(setup)
 
-chrome.runtime.onMessage.addListener((request) => {
-  console.log('background got message: ', request)
-})
-
-chrome.runtime.onInstalled.addListener(() => {
-  setup()
-})
-
-/**
- * Setup function to create an offscreen document for audio playback.
- */
 function setup() {
   const path = 'offscreen.html'
   const reason = 'AUDIO_PLAYBACK'
@@ -20,34 +8,25 @@ function setup() {
   const configs = setupStorageConfig()
 
   chrome.storage.local.clear()
-  // Create offscreen document
   createOffscreenDocument(path, reason, justification)
-
-  localStorage.set(configs, () => {
-    console.log('Configs set ho gaya!')
-  })
-
-  console.log('setup done')
+  localStorage.set(configs, logConfigsSet)
 }
 
-// Set initial configs
+function logConfigsSet() {
+  console.log('Configs set ho gaya!')
+}
 
-// // Get configs
-// localStorage.get(['timer', 'animation', 'sound'], (result) => {
-//   console.log('Timer data:', result.timer)
-//   console.log('Animation data:', result.animation)
-//   console.log('Sound data:', result.sound)
-// })
-
-// // Listen for changes
-// localStorage.listen((changes) => {
-//   if (changes.timer) {
-//     console.log('Timer change hua:', changes.timer.newValue)
-//   }
-//   if (changes.animation) {
-//     console.log('Animation change hui:', changes.animation.newValue)
-//   }
-//   if (changes.sound) {
-//     console.log('Sound change hua:', changes.sound.newValue)
-//   }
-// })
+// Listen for messages from the popup or other parts of the extension
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request.type === 'playConfetti') {
+    // Forward the message to the content script
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) {
+        chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
+      } else {
+        sendResponse({ success: false })
+      }
+    })
+  }
+  return true
+})

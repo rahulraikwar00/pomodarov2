@@ -2,8 +2,8 @@
 @import url('https://use.fontawesome.com/releases/v5.15.4/css/all.css');
 
 body {
-  width: 400px;
-  height: 400px;
+  width: 120px;
+  height: 180px;
   background-color: #fff;
   font-family: 'Margarine', sans-serif;
   display: flex;
@@ -11,43 +11,41 @@ body {
   justify-content: center;
   align-items: center;
   position: relative;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
 }
 
 #title,
 #time {
   font-weight: 700;
-  color: #000;
+  color: #dfdfdf;
   text-align: center;
-  text-shadow: 1px 1px 2px #fff;
+  text-shadow: 1px 1px 2px #000;
   animation: fadeIn 1s ease-in-out both;
 }
 
 #title {
-  font-size: 24px;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  font-size: 16px;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 #time {
-  font-size: 60px;
-  margin-bottom: 20px;
+  font-size: 40px;
+  margin-bottom: 5px;
 }
 
 #controls {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 20px;
+  gap: 5px;
 }
 
 #controls button {
-  padding: 10px 20px;
-  font-size: 18px;
+  padding: 2px 5px;
+  font-size: 12px;
   cursor: pointer;
-  background-color: #333;
-  color: #fff;
+  background-color: #ddd;
+  color: #333;
   border: none;
   border-radius: 5px;
   font-family: 'Margarine', sans-serif;
@@ -59,7 +57,7 @@ body {
 }
 
 #controls button:hover {
-  background-color: #555;
+  background-color: #ccc;
   transform: scale(1.05);
 }
 
@@ -74,7 +72,6 @@ body {
   left: 0;
   z-index: -99;
   filter: blur(1px);
-  border-radius: 10px;
 }
 
 @keyframes fadeIn {

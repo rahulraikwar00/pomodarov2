@@ -4,6 +4,10 @@ import { hasOffscreenDocument, localStorage, createOffscreenDocument } from '../
 // Initialize background music control
 const initBackgroundMusic = () => {
   const backgroundMusic = document.getElementById('backgroundMusic')
+  const confettiButton = document.createElement('button')
+  confettiButton.id = 'confettiButton'
+  confettiButton.textContent = 'confetti'
+  document.body.appendChild(confettiButton)
 
   // Set the initial state of the background music from localStorage
   localStorage.get('sound', (result) => {
@@ -31,6 +35,27 @@ const initBackgroundMusic = () => {
       console.error('Error handling background music:', error)
     }
   }
+
+  confettiButton.addEventListener('click', async () => {
+    console.log('confettiButton click')
+    // Inject the confetti script before playing
+    chrome.runtime.sendMessage({ type: 'playConfetti' }, (response) => {
+      // if (response.success) {
+      //   chrome.runtime.sendMessage(
+      //     {
+      //       type: 'playConfetti',
+      //       message: 'confetti',
+      //     },
+      //     (response) => {
+      //       console.log('response', response)
+      //     },
+      //   )
+      // } else {
+      //   console.error('Failed to inject confetti script')
+      // }
+      console.log('response in popoup ', response)
+    })
+  })
 
   backgroundMusic.addEventListener('click', togglePlayState)
 }

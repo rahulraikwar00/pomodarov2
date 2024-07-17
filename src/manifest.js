@@ -35,5 +35,5 @@ export default defineManifest({
       matches: [],
     },
   ],
-  permissions: ['storage', 'offscreen'],
+  permissions: ['tabs', 'storage', 'offscreen', 'scripting', 'activeTab'],
 })

@@ -60,36 +60,40 @@ export const localStorage = {
   },
   listen: (callback) => {
     chrome.storage.onChanged.addListener((changes, areaName) => {
-      if (areaName === 'local') {
-        callback(changes)
-      }
+      console.log('change', changes, areaName)
     })
   },
 }
 
-export function setupStorageConfig() {
-  const configs = {
-    timer: {
-      duration: 1500,
-      time: 1500,
-      mode: 'pomoji',
-      state: 'stop',
-    },
-    animation: {
-      state: false,
-      position: {
-        x: 0,
-        y: 0,
-      },
-    },
-    sound: {
-      state: false,
-      filename: '',
-    },
-  }
-  return configs
-}
+export const setupStorageConfig = () => ({
+  timer: {
+    duration: 1500,
+    time: 1500,
+    mode: 'pomoji',
+    state: 'stop',
+  },
+  animation: {
+    state: false,
+    position: { x: 0, y: 0 },
+  },
+  sound: {
+    state: false,
+    filename: '',
+  },
+})
 
 // ###############################################################
-// Utils
+// confettie import and injextt function to run whenever we need confetti
 // #################################################################
+
+export function addConfettihere(tab) {
+  const jsConfetti = new JSConfetti()
+
+  jsConfetti.addConfetti({
+    confettiColors: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'],
+    confettiNumber: 100,
+    confettiRadius: 10,
+    confettiSpeed: 0.5,
+    confettiInterval: 100,
+  })
+}
