@@ -1,7 +1,5 @@
 import './index.css'
 import { localStorage, updateDisplay, togglePlayState } from '../utills'
-
-// Initialize background music control
 const initBackgroundMusic = () => {
   const backgroundMusic = document.getElementById('backgroundMusic')
   const confettiButton = document.createElement('button')

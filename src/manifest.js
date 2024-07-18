@@ -26,7 +26,7 @@ export default defineManifest({
   content_scripts: [
     {
       matches: ['http://*/*', 'https://*/*'],
-      js: ['src/contentScript/index.js'],
+      js: ['src/contentScript/index.js', 'src/contentScript/confettie.js'],
     },
   ],
   web_accessible_resources: [

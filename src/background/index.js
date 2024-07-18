@@ -1,4 +1,10 @@
-import { createOffscreenDocument, setupStorageConfig, localStorage, updateTime } from '../utills'
+import {
+  createOffscreenDocument,
+  setupStorageConfig,
+  localStorage,
+  updateTime,
+  playConfetti,
+} from '../utills'
 chrome.runtime.onInstalled.addListener(setup)
 
 function setup() {
@@ -17,31 +23,39 @@ function logConfigsSet() {
 }
 
 // Listen for messages from the popup or other parts of the extension
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request.type === 'playConfetti') {
-    // Forward the message to the content script
-    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-      if (tabs[0]) {
-        chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
-      } else {
-        sendResponse({ success: false })
-      }
-    })
-  }
-  return true
-})
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   if (request.type === 'playConfetti') {
+//     // Forward the message to the content script
+//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//       if (tabs[0]) {
+//         chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
+//       } else {
+//         sendResponse({ success: false })
+//       }
+//     })
+//   }
+//   return true
+// })
 
 // ###############################################
 // timer code
 // ###############################################
 
-let timer = 25 * 60
+let timer = 10
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name !== 'pomodaro') return
 
   const minutes = Math.floor(timer / 60)
   const seconds = timer % 60
   timer -= 1
+  if (timer < 0) {
+    timer = 7
+    playConfetti()
+    chrome.alarms.clear('pomodaro')
+    chrome.action.setBadgeText({
+      text: '00:00',
+    })
+  }
   updateTime(timer)
   console.log('pomodaro triggered', timer)
   chrome.action.setBadgeText({

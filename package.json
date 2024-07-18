@@ -30,6 +30,7 @@
     "vite": "^4.4.11"
   },
   "dependencies": {
+    "canvas-confetti": "^1.9.3",
     "js-confetti": "^0.12.0"
   }
 }

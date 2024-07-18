@@ -148,3 +148,11 @@ export function addConfettihere(tab) {
     confettiInterval: 150,
   })
 }
+
+export function playConfetti() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]) {
+      chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' })
+    }
+  })
+}
