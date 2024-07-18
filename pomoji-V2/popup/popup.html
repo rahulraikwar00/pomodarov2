@@ -1,0 +1,24 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <div id="app"></div>
+    <div id="title">Pomoji</div>
+    <div id="time" aria-live="polite">
+      <span id="timer" aria-atomic="true">00:00</span>
+    </div>
+    <div id="controls" role="group" aria-label="Timer controls">
+      <button id="startbutton" class="toggle" aria-label="Start timer">
+        start focus
+      </button>
+      <button id="resetbutton" aria-label="Start timer">reset</button>
+      <button id="play" aria-label="music">play</button>
+      <button id="pause" aria-label="music">pause</button>
+    </div>
+    <script type="module" src="./popup.js"></script>
+  </body>
+</html>

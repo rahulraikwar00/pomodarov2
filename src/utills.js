@@ -82,6 +82,57 @@ export const setupStorageConfig = () => ({
   },
 })
 
+// Function to update the time value
+export function updateTime(newTime) {
+  localStorage.get('timer', (result) => {
+    if (result.timer) {
+      result.timer.time = newTime
+      localStorage.set({ timer: result.timer }, () => {
+        console.log('Time value updated successfully')
+      })
+    } else {
+      console.error('Timer configuration not found')
+    }
+  })
+}
+
+export function updateDisplay() {
+  localStorage.get('timer', (result) => {
+    if (result.timer) {
+      const time = result.timer.time
+      const minutes = Math.floor(time / 60)
+      const seconds = time % 60
+      console.log(minutes, seconds)
+      const timerDisplay = document.getElementById('timer')
+      timerDisplay.innerText = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+    } else {
+      console.error('Timer configuration not found')
+    }
+  })
+}
+
+// Toggle play/pause state and update localStorageex
+export const togglePlayState = async () => {
+  try {
+    const path = 'offscreen.html'
+    let offscreenAvailable = await hasOffscreenDocument(path)
+
+    if (!offscreenAvailable) {
+      await createOffscreenDocument(path, 'AUDIO_PLAYBACK', 'Background music playback')
+      offscreenAvailable = await hasOffscreenDocument(path)
+    }
+
+    if (offscreenAvailable) {
+      const isPlaying = backgroundMusic.innerText === 'play'
+      chrome.runtime.sendMessage(isPlaying ? 'play' : 'pause')
+      backgroundMusic.innerText = isPlaying ? 'pause' : 'play'
+      localStorage.set({ sound: { state: isPlaying } })
+    }
+  } catch (error) {
+    console.error('Error handling background music:', error)
+  }
+}
+
 // ###############################################################
 // confettie import and injextt function to run whenever we need confetti
 // #################################################################
@@ -92,8 +143,8 @@ export function addConfettihere(tab) {
   jsConfetti.addConfetti({
     confettiColors: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'],
     confettiNumber: 100,
-    confettiRadius: 10,
-    confettiSpeed: 0.5,
-    confettiInterval: 100,
+    confettiRadius: 5,
+    confettiSpeed: 0.8,
+    confettiInterval: 150,
   })
 }

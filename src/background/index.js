@@ -1,4 +1,4 @@
-import { createOffscreenDocument, setupStorageConfig, localStorage } from '../utills'
+import { createOffscreenDocument, setupStorageConfig, localStorage, updateTime } from '../utills'
 chrome.runtime.onInstalled.addListener(setup)
 
 function setup() {
@@ -30,3 +30,29 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   return true
 })
+
+// ###############################################
+// timer code
+// ###############################################
+
+let timer = 25 * 60
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name !== 'pomodaro') return
+
+  const minutes = Math.floor(timer / 60)
+  const seconds = timer % 60
+  timer -= 1
+  updateTime(timer)
+  console.log('pomodaro triggered', timer)
+  chrome.action.setBadgeText({
+    text: `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
+    // text: timer.toString(),
+  })
+})
+
+function setAlarm() {
+  chrome.alarms.create('pomodaro', {
+    periodInMinutes: 1 / 60,
+  })
+}
+setAlarm()

@@ -1,0 +1,19 @@
+{
+  "name": "pomoji-v2",
+  "private": true,
+  "version": "1.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "@crxjs/vite-plugin": "^1.0.14",
+    "@types/canvas-confetti": "^1.6.4",
+    "vite": "^2.9.15"
+  },
+  "dependencies": {
+    "@tsparticles/preset-confetti": "^3.1.0",
+    "canvas-confetti": "^1.9.3"
+  }
+}
