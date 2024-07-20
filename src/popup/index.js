@@ -1,64 +1,89 @@
-import './index.css'
-import { togglePlayState } from '../audioManager'
-import { localStorage } from '../localstorage'
-import { playConfetti } from '../contentScript/confettie'
+import "./index.css";
+import { togglePlayState } from "../audioManager";
+import { localStorage } from "../localstorage";
+import { playConfetti } from "../contentScript/confettie";
 
 // Initialize background music control
 const initBackgroundMusic = () => {
-  const backgroundMusic = document.getElementById('backgroundMusic')
-  const controls = document.getElementById('controls')
-  const startAndPauseButton = document.getElementById('startAndPause')
+  const backgroundMusic = document.getElementById("backgroundMusic");
+  const controls = document.getElementById("controls");
+  const startAndPauseButton = document.getElementById("startAndPause");
 
-  const confettiButton = createButton('confettiButton', 'Confetti', handleConfettiClick)
-  controls.appendChild(confettiButton)
+  const confettiButton = createButton(
+    "confettiButton",
+    "Confetti",
+    handleConfettiClick
+  );
+  controls.appendChild(confettiButton);
 
-  setButtonStateFromLocalStorage(startAndPauseButton, 'timer', 'state', 'Pause', 'Play')
-  setButtonStateFromLocalStorage(backgroundMusic, 'sound', 'state', 'Pause', 'Play')
+  setButtonStateFromLocalStorage(
+    startAndPauseButton,
+    "timer",
+    "state",
+    "pause",
+    "play"
+  );
+  setButtonStateFromLocalStorage(
+    backgroundMusic,
+    "sound",
+    "state",
+    "pause",
+    "play"
+  );
 
-  startAndPauseButton.addEventListener('click', () => {
-    toggleTimerState(startAndPauseButton)
-  })
+  startAndPauseButton.addEventListener("click", () => {
+    toggleTimerState(startAndPauseButton);
+  });
 
-  backgroundMusic.addEventListener('click', togglePlayState)
-}
+  backgroundMusic.addEventListener("click", togglePlayState);
+};
 
 // Create a button element
 const createButton = (id, text, onClick) => {
-  const button = document.createElement('button')
-  button.id = id
-  button.textContent = text
-  button.addEventListener('click', onClick)
-  return button
-}
+  const button = document.createElement("button");
+  button.id = id;
+  button.textContent = text;
+  button.addEventListener("click", onClick);
+  return button;
+};
 
 // Set button state based on local storage value
-const setButtonStateFromLocalStorage = (button, key, stateKey, trueText, falseText) => {
+const setButtonStateFromLocalStorage = (
+  button,
+  key,
+  stateKey,
+  trueText,
+  falseText
+) => {
   localStorage.get(key, (result) => {
-    button.innerText = result[key][stateKey] ? trueText : falseText
-  })
-}
+    button.innerText = result[key][stateKey] ? trueText : falseText;
+  });
+};
 
 // Toggle timer state and update button text
 const toggleTimerState = (button) => {
-  localStorage.get('timer', (result) => {
-    const isActive = result.timer.state
-    localStorage.set({ timer: { state: !isActive } })
-    button.innerText = isActive ? 'Play' : 'Pause'
-  })
-}
+  localStorage.get("timer", (result) => {
+    const isActive = result.timer.state;
+    localStorage.set({ timer: { state: !isActive } });
+    button.innerText = isActive ? "Play" : "Pause";
+  });
+};
 
 // Handle confetti button click
 const handleConfettiClick = () => {
-  console.log('Confetti button clicked')
-  playConfetti()
-}
+  console.log("Confetti button clicked");
+  playConfetti();
+};
 
 // Apply initial UI settings and setup background music control
-document.addEventListener('DOMContentLoaded', () => {
-  const app = document.getElementById('app')
-  app.style.setProperty('--background', `url(${chrome.runtime.getURL('img/girl.gif')})`)
-  initBackgroundMusic()
-})
+document.addEventListener("DOMContentLoaded", () => {
+  const app = document.getElementById("app");
+  app.style.setProperty(
+    "--background",
+    `url(${chrome.runtime.getURL("img/girl.gif")})`
+  );
+  initBackgroundMusic();
+});
 
 // DELAYED IMPLEMENTATION OF TIMER FOR TESTING PURPOSES
 //

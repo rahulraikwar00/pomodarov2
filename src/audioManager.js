@@ -1,23 +1,36 @@
-import { createOffscreenDocument, hasOffscreenDocument } from './utills'
-import { localStorage } from './localstorage'
+import { createOffscreenDocument, hasOffscreenDocument } from "./utills";
+import { localStorage } from "./localstorage";
+
+const path = "offscreen.html";
 
 export const togglePlayState = async () => {
   try {
-    const path = 'offscreen.html'
-    let offscreenAvailable = await hasOffscreenDocument(path)
+    let offscreenAvailable = await hasOffscreenDocument(path);
 
     if (!offscreenAvailable) {
-      await createOffscreenDocument(path, 'AUDIO_PLAYBACK', 'Background music playback')
-      offscreenAvailable = await hasOffscreenDocument(path)
+      await createOffscreenDocumentIFNecessary();
+      offscreenAvailable = await hasOffscreenDocument(path);
     }
 
     if (offscreenAvailable) {
-      const isPlaying = backgroundMusic.innerText === 'play'
-      chrome.runtime.sendMessage(isPlaying ? 'play' : 'pause')
-      backgroundMusic.innerText = isPlaying ? 'pause' : 'play'
-      localStorage.set({ sound: { state: isPlaying } })
+      const isPlaying = backgroundMusic.innerText === "pause";
+      chrome.runtime.sendMessage(isPlaying ? "pause" : "play");
+      backgroundMusic.innerText = isPlaying ? "play" : "pause";
+      localStorage.set({ sound: { state: !isPlaying } });
     }
   } catch (error) {
-    console.error('Error handling background music:', error)
+    console.error("Error handling background music:", error);
   }
-}
+};
+
+const createOffscreenDocumentIFNecessary = async () => {
+  try {
+    await createOffscreenDocument(
+      path,
+      "AUDIO_PLAYBACK",
+      "Background music playback"
+    );
+  } catch (error) {
+    console.error("Error creating offscreen document:", error);
+  }
+};
