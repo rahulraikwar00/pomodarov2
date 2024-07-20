@@ -1,6 +1,7 @@
-import { createOffscreenDocument, updateTime } from '../utills'
-import { localStorage, setupStorageConfig } from '../localstorage'
+import { createOffscreenDocument, updateTimerValue } from '../utills'
+import { localStorage } from '../localstorage'
 import { playConfetti } from '../contentScript/confettie'
+import { setupStorageConfig } from '../storageSchema'
 
 chrome.runtime.onInstalled.addListener(setup)
 
@@ -18,21 +19,6 @@ function setup() {
 function logConfigsSet() {
   console.log('Configs set ho gaya!')
 }
-
-// Listen for messages from the popup or other parts of the extension
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   if (request.type === 'playConfetti') {
-//     // Forward the message to the content script
-//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//       if (tabs[0]) {
-//         chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
-//       } else {
-//         sendResponse({ success: false })
-//       }
-//     })
-//   }
-//   return true
-// })
 
 // ###############################################
 // timer code
@@ -53,7 +39,7 @@ chrome.alarms.onAlarm.addListener((alarm) => {
       text: '00:00',
     })
   }
-  updateTime(timer)
+  updateTimerValue(timer)
   console.log('pomodaro triggered', timer)
   chrome.action.setBadgeText({
     text: `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`,
@@ -67,3 +53,18 @@ function setAlarm() {
   })
 }
 setAlarm()
+
+// Listen for messages from the popup or other parts of the extension
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//   if (request.type === 'playConfetti') {
+//     // Forward the message to the content script
+//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//       if (tabs[0]) {
+//         chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
+//       } else {
+//         sendResponse({ success: false })
+//       }
+//     })
+//   }
+//   return true
+// })

@@ -23,20 +23,3 @@ export const localStorage = {
     })
   },
 }
-
-export const setupStorageConfig = () => ({
-  timer: {
-    duration: 1500,
-    time: 1500,
-    mode: 'pomoji',
-    state: 'stop',
-  },
-  animation: {
-    state: false,
-    position: { x: 0, y: 0 },
-  },
-  sound: {
-    state: false,
-    filename: '',
-  },
-})

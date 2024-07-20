@@ -1,9 +1,9 @@
 import { localStorage } from './localstorage'
 
-export async function createOffscreenDocument(path, reason, justification) {
+export async function createOffscreenDocument(urlPath, reason, justification) {
   try {
     const offscreenDocument = await chrome.offscreen.createDocument({
-      url: chrome.runtime.getURL(path),
+      url: chrome.runtime.getURL(urlPath),
       reasons: [reason],
       justification: justification,
     })
@@ -14,14 +14,14 @@ export async function createOffscreenDocument(path, reason, justification) {
   }
 }
 
-export async function hasOffscreenDocument(path) {
+export async function hasOffscreenDocument(urlPath) {
   try {
-    const offscreenUrl = chrome.runtime.getURL(path)
-    const existingContexts = await chrome.runtime.getContexts({
+    const offscreenUrl = chrome.runtime.getURL(urlPath)
+    const existingOffscreenDocuments = await chrome.runtime.getContexts({
       contextTypes: ['OFFSCREEN_DOCUMENT'],
       documentUrls: [offscreenUrl],
     })
-    return existingContexts.length > 0
+    return existingOffscreenDocuments.length > 0
   } catch (error) {
     console.error('Error checking offscreen document:', error)
     return false
@@ -33,7 +33,7 @@ export async function hasOffscreenDocument(path) {
 // #################################################################
 
 // Function to update the time value
-export function updateTime(newTime) {
+export function updateTimerValue(newTime) {
   localStorage.get('timer', (result) => {
     if (result.timer) {
       result.timer.time = newTime
@@ -61,43 +61,36 @@ export function updateDisplay() {
   })
 }
 
-// Toggle play/pause music state and update localStorageex
-
-// ###############################################################
-// confettie import and injextt function to run whenever we need confetti
-// #################################################################
-
 // ###############################################
 // pomodoro timer controlls
 // ###############################################
-
-export class TimerController {
+export class PomodoroTimerController {
   constructor() {
     this.alarmName = 'pomodoro'
   }
 
-  startTimer() {
+  startPomodoroTimer() {
     chrome.alarms.create(this.alarmName, {
-      when: Date.now() + 1000 * 60 * 7,
-      periodInMinutes: 1,
+      when: Date.now() + 1000 * 60 * 25,
+      periodInMinutes: 25,
     })
   }
 
-  stopTimer() {
+  stopPomodoroTimer() {
     chrome.alarms.clear(this.alarmName)
   }
 
-  resetTimer() {
-    this.stopTimer()
-    this.startTimer()
+  resetPomodoroTimer() {
+    this.stopPomodoroTimer()
+    this.startPomodoroTimer()
   }
 
-  toggleTimer() {
+  togglePomodoroTimer() {
     chrome.alarms.get(this.alarmName, (alarm) => {
       if (alarm) {
-        this.stopTimer()
+        this.stopPomodoroTimer()
       } else {
-        this.startTimer()
+        this.startPomodoroTimer()
       }
     })
   }
