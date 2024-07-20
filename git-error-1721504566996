@@ -1,0 +1,8 @@
+> git rebase --continue
+Rebasing (3/4)
+error: could not apply a8bcb36... gitignore update
+hint: Resolve all conflicts manually, mark them as resolved with
+hint: "git add/rm <conflicted_files>", then run "git rebase --continue".
+hint: You can instead skip this commit: run "git rebase --skip".
+hint: To abort and get back to the state before "git rebase", run "git rebase --abort".
+Could not apply a8bcb36... gitignore update

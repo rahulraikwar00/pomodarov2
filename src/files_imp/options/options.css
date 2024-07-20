@@ -1,0 +1,77 @@
+@import url("https://fonts.googleapis.com/css2?family=Margarine:wght@400;700&display=swap");
+
+body {
+  width: 120px;
+  height: 180px;
+  background-color: #fff;
+  font-family: "Margarine", sans-serif;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: larger;
+}
+
+#quote {
+  opacity: 0.6;
+}
+#app {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-position: center;
+}
+
+#title {
+  font-weight: 700;
+  color: #282727;
+  text-align: center;
+}
+
+#setTimeForm {
+  display: flex;
+  align-items: center;
+  margin: 10px 0;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: #acacac;
+}
+
+#timeInputLabel {
+  padding: 5px;
+  font-size: 14px;
+}
+
+#timeInput {
+  width: 50px;
+  padding: 5px;
+  font-size: 14px;
+  /* text-align: center; */
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+#setTime {
+  padding: 5px 10px; /* Adjusted padding for smaller width */
+  font-size: 14px; /* Adjusted font size */
+  cursor: pointer;
+  background-color: #ddd;
+  color: #333;
+  border: none;
+  border-radius: 5px;
+  font-weight: 400;
+  /* transition: background-color 0.3s ease; */
+}
+
+#setTime:hover {
+  background-color: #ccc;
+}
