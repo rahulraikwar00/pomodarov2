@@ -85,6 +85,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initBackgroundMusic();
 });
 
+
 // DELAYED IMPLEMENTATION OF TIMER FOR TESTING PURPOSES
 //
 //

@@ -34,3 +34,4 @@ const createOffscreenDocumentIFNecessary = async () => {
     console.error("Error creating offscreen document:", error);
   }
 };
+
