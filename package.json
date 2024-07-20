@@ -1,9 +1,9 @@
 {
-  "name": "my-crx",
-  "displayName": "my-crx",
-  "version": "0.0.0",
-  "author": "no one",
-  "description": "",
+  "name": "pomoji",
+  "displayName": "Pomoji: Pomodoro and Focus Timer with Animated Buddy",
+  "version": "0.0.2",
+  "author": "Rahul Raikwar <rr200636@gmail.com> (https://github.com/rahulraikwar00) <https://github.com/rahulraikwar00>",
+  "description": "A Pomodoro and focus timer with an animated buddy walking at the bottom of the tab to enhance your focus.",
   "type": "module",
   "license": "MIT",
   "keywords": [
@@ -24,9 +24,14 @@
   },
   "devDependencies": {
     "@crxjs/vite-plugin": "^2.0.0-beta.19",
+    "@types/canvas-confetti": "^1.6.4",
     "gulp": "^5.0.0",
     "gulp-zip": "^6.0.0",
     "prettier": "^3.0.3",
     "vite": "^4.4.11"
+  },
+  "dependencies": {
+    "canvas-confetti": "^1.9.3",
+    "js-confetti": "^0.12.0"
   }
 }
