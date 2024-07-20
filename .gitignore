@@ -1,3 +1,4 @@
+
 # See https://help.github.com/ignore-files/ for more about ignoring files.
 
 # dependencies
@@ -26,3 +27,8 @@ secrets.*.js
 .npmignore
 .prettierignore
 .prettierrc
+
+testext/
+.env
+
+src/files_imp

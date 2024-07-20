@@ -1,7 +1,5 @@
 # Pomoji
 
-> A Chrome extension for Pomodoro and focus timer with an animated buddy walking at the bottom of the tab to enhance your focus.
-
 ## Installing
 
 1. Ensure your `Node.js` version is >= _14_.
