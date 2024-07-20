@@ -44,3 +44,23 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   return true
 })
+
+// export function addConfettihere(tab) {
+//   const jsConfetti = new JSConfetti()
+
+//   jsConfetti.addConfetti({
+//     confettiColors: ['#ff0000', '#ffff00', '#00ff00', '#00ffff', '#0000ff', '#ff00ff', '#ff0000'],
+//     confettiNumber: 100,
+//     confettiRadius: 5,
+//     confettiSpeed: 0.8,
+//     confettiInterval: 150,
+//   })
+// }
+
+export function playConfetti() {
+  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+    if (tabs[0]) {
+      chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' })
+    }
+  })
+}

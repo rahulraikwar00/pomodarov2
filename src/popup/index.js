@@ -1,5 +1,7 @@
 import './index.css'
-import { localStorage, updateDisplay, togglePlayState } from '../utills'
+import { updateDisplay } from '../utills'
+import { togglePlayState } from '../audioManager'
+import { localStorage } from '../localstorage'
 const initBackgroundMusic = () => {
   const backgroundMusic = document.getElementById('backgroundMusic')
   const confettiButton = document.createElement('button')
@@ -33,3 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
     })
   })
 })
+
+// function toggleSoundtext() {
+//   const backgroundMusic = document.getElementById('backgroundMusic')
+//   if (backgroundMusic) {
+//     backgroundMusic.innerText = backgroundMusic.innerText === 'play' ? 'pause' : 'play'
+//     localStorage.set({ sound: { state: backgroundMusic.innerText === 'play' } })
+//   } else {
+//     console.error('Element with id "backgroundMusic" not found.')
+//   }
+// }

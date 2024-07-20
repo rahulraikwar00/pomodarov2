@@ -1,10 +1,7 @@
-import {
-  createOffscreenDocument,
-  setupStorageConfig,
-  localStorage,
-  updateTime,
-  playConfetti,
-} from '../utills'
+import { createOffscreenDocument, updateTime } from '../utills'
+import { localStorage, setupStorageConfig } from '../localstorage'
+import { playConfetti } from '../contentScript/confettie'
+
 chrome.runtime.onInstalled.addListener(setup)
 
 function setup() {
