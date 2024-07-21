@@ -1,70 +1,194 @@
-import { createOffscreenDocument, updateTimerValue } from "../utills";
-import { localStorage } from "../localstorage";
-import { playConfetti } from "../contentScript/confettie";
-import { setupStorageConfig } from "../storageSchema";
+import {
+  createOffscreenDocument,
+  logConfigsSet,
+  updateTimerValue,
+} from "../utils";
+import { localStorage, setupStorageConfig } from "../localstorage";
 
-chrome.runtime.onInstalled.addListener(setup);
+const onInstalled = async () => {
+  const { path, reason, justification, configs } =
+    getOffscreenDocumentCreationData();
 
-function setup() {
-  const path = "offscreen.html";
-  const reason = "AUDIO_PLAYBACK";
-  const justification = "for playing audio";
-  const configs = setupStorageConfig();
+  await clearStorage();
+  await clearAllAllarms();
+  await createOffscreenDocument(path, reason, justification);
+  await saveConfigs(configs);
+  await logStorageValue();
+};
 
-  chrome.storage.local.clear();
-  createOffscreenDocument(path, reason, justification);
-  localStorage.set(configs, logConfigsSet);
-  setAlarm();
-}
+const getOffscreenDocumentCreationData = () => ({
+  path: "offscreen.html",
+  reason: "AUDIO_PLAYBACK",
+  justification: "for playing audio",
+  configs: setupStorageConfig(),
+});
 
-function logConfigsSet() {
-  console.log("Configs set ho gaya!");
-}
+const clearStorage = () => chrome.storage.local.clear();
+const clearAllAllarms = () => chrome.alarms.clearAll();
+const saveConfigs = async (configs) => localStorage.set(configs, logConfigsSet);
+
+const logStorageValue = () =>
+  chrome.storage.local.get((result) => {
+    console.log("Timer value:", result);
+  });
+
+chrome.runtime.onInstalled.addListener(onInstalled);
 
 // ###############################################
 // timer code
 // ###############################################
 
-let timer = 10;
-chrome.alarms.onAlarm.addListener((alarm) => {
-  if (alarm.name !== "pomodaro") return;
+const TIMER_STATE = {
+  RUNNING: "running",
+  PAUSED: "paused",
+  STOPPED: "stopped",
+};
 
-  const minutes = Math.floor(timer / 60);
-  const seconds = timer % 60;
-  timer -= 1;
-  if (timer < 0) {
-    timer = 7;
-    // playConfetti()
-    chrome.alarms.clear("pomodaro");
-    chrome.action.setBadgeText({
-      text: "00:00",
+class Timer {
+  constructor() {
+    this.timer = 0;
+    this.stateType = TIMER_STATE.STOPPED;
+    this.alarmInterval = 1 / 60;
+  }
+
+  async init() {
+    try {
+      const configs = await this.getConfigs();
+      this.timer = configs?.timer?.time || 0;
+      this.stateType = configs?.timer?.stateType || TIMER_STATE.STOPPED;
+      // this.setupAlarm();
+      // this.updateDisplay();
+    } catch (error) {
+      console.error("Error initializing timer:", error);
+    }
+  }
+
+  async getConfigs() {
+    try {
+      const result = await localStorage.get("timer");
+      return result;
+    } catch (error) {
+      console.error("Error retrieving timer configs:", error);
+      return null;
+    }
+  }
+
+  setupAlarm() {
+    chrome.alarms.create("pomodoro", {
+      periodInMinutes: this.alarmInterval,
     });
   }
-  updateTimerValue(timer);
-  console.log("pomodaro triggered", timer);
-  chrome.action.setBadgeText({
-    text: `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
-    // text: timer.toString(),
-  });
-});
 
-function setAlarm() {
-  chrome.alarms.create("pomodaro", {
-    periodInMinutes: 1 / 60,
-  });
+  handleAlarm(alarm) {
+    if (this.stateType === TIMER_STATE.RUNNING) {
+      this.timer -= 1;
+      console.log("timer:", this.timer);
+      if (this.timer < 0) {
+        this.timer = 1500;
+        this.stateType = TIMER_STATE.STOPPED;
+      }
+      this.updateDisplay();
+      this.updateStorage();
+    }
+  }
+
+  startTimer(time) {
+    this.clearAlarm();
+    this.timer = time;
+    this.stateType = TIMER_STATE.RUNNING;
+    this.setupAlarm();
+    this.updateDisplay();
+    this.updateStorage();
+  }
+
+  resetTimer() {
+    this.clearAlarm();
+    this.timer = 1500;
+    this.stateType = TIMER_STATE.STOPPED;
+    this.updateDisplay();
+    this.updateStorage();
+  }
+
+  pauseTimer() {
+    this.clearAlarm();
+    this.stateType = TIMER_STATE.PAUSED;
+    this.updateDisplay();
+    this.updateStorage();
+  }
+
+  updateDisplay() {
+    try {
+      chrome.runtime.sendMessage({ type: "timerUpdate", payload: this.timer });
+    } catch (error) {
+      if (chrome.runtime.lastError) {
+        console.warn(
+          "Could not send message:",
+          chrome.runtime.lastError.message
+        );
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
+    updateTimerValue(this.timer);
+  }
+
+  updateStorage() {
+    localStorage
+      .set({
+        timer: {
+          time: this.timer,
+          stateType: this.stateType,
+        },
+      })
+      .then(() => {
+        // console.log("Timer state updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating timer state:", error);
+      });
+  }
+
+  clearAlarm() {
+    chrome.alarms.clearAll(() => {
+      console.log("Cleared all alarms");
+    });
+  }
+
+  handleTimer(request) {
+    if (request.type === "handleTimer") {
+      console.log("request.payload:", request.payload);
+      if (request.payload === "play") {
+        if (this.stateType === TIMER_STATE.PAUSED) {
+          this.resumeTimer();
+        } else {
+          this.startTimer(1500);
+        }
+      } else if (request.payload === "pause") {
+        this.pauseTimer();
+      } else if (request.payload === "reset") {
+        this.resetTimer();
+      }
+    }
+  }
+
+  resumeTimer() {
+    this.clearAlarm();
+    this.stateType = TIMER_STATE.RUNNING;
+    this.setupAlarm();
+    this.updateDisplay();
+    this.updateStorage();
+  }
 }
 
-// Listen for messages from the popup or other parts of the extension
-// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-//   if (request.type === 'playConfetti') {
-//     // Forward the message to the content script
-//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//       if (tabs[0]) {
-//         chrome.tabs.sendMessage(tabs[0].id, { type: 'playConfetti' }, sendResponse)
-//       } else {
-//         sendResponse({ success: false })
-//       }
-//     })
-//   }
-//   return true
-// })
+const timer = new Timer();
+timer.init();
+
+chrome.runtime.onMessage.addListener((request) => {
+  timer.handleTimer(request);
+  return true;
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  timer.handleAlarm(alarm);
+  console.log("Alarm triggered");
+});

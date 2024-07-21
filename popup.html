@@ -10,12 +10,16 @@
     <div id="app">
       <div id="title">Pomoji</div>
       <div id="time" aria-live="polite">
-        <span id="timer" aria-atomic="true">00:00</span>
+        <span id="timer" aria-atomic="true"></span>
       </div>
       <div id="controls" role="group" aria-label="Timer controls">
-        <button id="startAndPause" class="toggle" aria-label="Start timer"></button>
+        <button
+          id="startAndPause"
+          class="toggle"
+          aria-label="Start timer"
+        ></button>
         <button id="resetbutton" aria-label="Start timer">reset</button>
-        <button id="backgroundMusic" aria-label="music">enable sound</button>
+        <button id="backgroundMusic" aria-label="music">play</button>
       </div>
     </div>
     <script type="module" src="/src/popup/index.js"></script>

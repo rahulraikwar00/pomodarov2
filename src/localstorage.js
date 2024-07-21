@@ -1,25 +1,57 @@
 export const localStorage = {
-  get: (key, callback) => {
-    chrome.storage.local.get(key, (result) => {
-      if (chrome.runtime.lastError) {
-        console.error('Error retrieving data:', chrome.runtime.lastError)
-      } else {
-        callback(result)
-      }
-    })
+  async get(key) {
+    try {
+      const result = await new Promise((resolve, reject) => {
+        chrome.storage.local.get(key, (result) => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve(result);
+          }
+        });
+      });
+      return result;
+    } catch (error) {
+      console.error("Error retrieving data:", error);
+      throw error;
+    }
   },
-  set: (configs, callback) => {
-    chrome.storage.local.set(configs, () => {
-      if (chrome.runtime.lastError) {
-        console.error('Error setting data:', chrome.runtime.lastError)
-      } else if (callback) {
-        callback()
-      }
-    })
+  async set(configs) {
+    try {
+      await new Promise((resolve, reject) => {
+        chrome.storage.local.set(configs, () => {
+          if (chrome.runtime.lastError) {
+            reject(chrome.runtime.lastError);
+          } else {
+            resolve();
+          }
+        });
+      });
+    } catch (error) {
+      console.error("Error setting data:", error);
+      throw error;
+    }
   },
-  listen: (callback) => {
-    chrome.storage.onChanged.addListener((changes, areaName) => {
-      console.log('change', changes, areaName)
-    })
-  },
-}
+};
+
+export const setupStorageConfig = () => {
+  const timer = {
+    duration: 1500,
+    time: 1500,
+    mode: "pomoji",
+    stateType: "stopped",
+    state: false,
+  };
+
+  const animation = {
+    state: false,
+    position: { x: 0, y: 0 },
+  };
+
+  const sound = {
+    state: false,
+    filename: "",
+  };
+
+  return { timer, animation, sound };
+};
