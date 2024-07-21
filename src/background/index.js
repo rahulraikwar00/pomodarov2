@@ -10,7 +10,7 @@ const onInstalled = async () => {
     getOffscreenDocumentCreationData();
 
   await clearStorage();
-  // await clearAllalarms();
+  await clearAllAllarms();
   await createOffscreenDocument(path, reason, justification);
   await saveConfigs(configs);
   await logStorageValue();
@@ -24,8 +24,7 @@ const getOffscreenDocumentCreationData = () => ({
 });
 
 const clearStorage = () => chrome.storage.local.clear();
-// const clearAllalarms = () => chrome.alarm.clear("pomodaro");
-
+const clearAllAllarms = () => chrome.alarms.clearAll();
 const saveConfigs = async (configs) => localStorage.set(configs, logConfigsSet);
 
 const logStorageValue = () =>
@@ -75,17 +74,15 @@ class Timer {
   }
 
   setupAlarm() {
-    chrome.alarms.create("pomodaro", {
+    chrome.alarms.create("pomodoro", {
       periodInMinutes: this.alarmInterval,
     });
-    chrome.alarms.onAlarm.addListener(this.handleAlarm.bind(this));
   }
 
   handleAlarm(alarm) {
-    console.log("alarme triggerd at : ", this.timer, "alams is : ", alarm);
-    if (alarm.name !== "pomodaro") return;
     if (this.stateType === TIMER_STATE.RUNNING) {
       this.timer -= 1;
+      console.log("timer:", this.timer);
       if (this.timer < 0) {
         this.timer = 1500;
         this.stateType = TIMER_STATE.STOPPED;
@@ -96,6 +93,7 @@ class Timer {
   }
 
   startTimer(time) {
+    this.clearAlarm();
     this.timer = time;
     this.stateType = TIMER_STATE.RUNNING;
     this.setupAlarm();
@@ -104,22 +102,33 @@ class Timer {
   }
 
   resetTimer() {
+    this.clearAlarm();
     this.timer = 1500;
     this.stateType = TIMER_STATE.STOPPED;
-    this.clearAlarm();
     this.updateDisplay();
     this.updateStorage();
   }
 
   pauseTimer() {
-    this.stateType = TIMER_STATE.PAUSED;
     this.clearAlarm();
+    this.stateType = TIMER_STATE.PAUSED;
     this.updateDisplay();
     this.updateStorage();
   }
 
   updateDisplay() {
-    chrome.runtime.sendMessage({ type: "timerUpdate", payload: this.timer });
+    try {
+      chrome.runtime.sendMessage({ type: "timerUpdate", payload: this.timer });
+    } catch (error) {
+      if (chrome.runtime.lastError) {
+        console.warn(
+          "Could not send message:",
+          chrome.runtime.lastError.message
+        );
+      } else {
+        console.error("Unexpected error:", error);
+      }
+    }
     updateTimerValue(this.timer);
   }
 
@@ -132,7 +141,7 @@ class Timer {
         },
       })
       .then(() => {
-        console.log("Timer state updated successfully");
+        // console.log("Timer state updated successfully");
       })
       .catch((error) => {
         console.error("Error updating timer state:", error);
@@ -163,6 +172,7 @@ class Timer {
   }
 
   resumeTimer() {
+    this.clearAlarm();
     this.stateType = TIMER_STATE.RUNNING;
     this.setupAlarm();
     this.updateDisplay();
@@ -176,4 +186,9 @@ timer.init();
 chrome.runtime.onMessage.addListener((request) => {
   timer.handleTimer(request);
   return true;
+});
+
+chrome.alarms.onAlarm.addListener((alarm) => {
+  timer.handleAlarm(alarm);
+  console.log("Alarm triggered");
 });

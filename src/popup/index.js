@@ -8,6 +8,7 @@ const initBackgroundMusic = () => {
   const controls = {
     backgroundMusic: document.getElementById("backgroundMusic"),
     startAndPauseButton: document.getElementById("startAndPause"),
+    resteButton: document.getElementById("resetbutton"),
   };
 
   chrome.runtime.onMessage.addListener((request) => {
@@ -29,6 +30,14 @@ const initBackgroundMusic = () => {
           : "play";
   });
 
+  chrome.storage.local.get("sound", (result) => {
+    if (result?.sound?.state) {
+      controls.backgroundMusic.innerText = "pause";
+    } else {
+      controls.backgroundMusic.innerText = "play";
+    }
+  });
+
   controls.startAndPauseButton.addEventListener("click", () => {
     const buttonInnerText = controls.startAndPauseButton.innerText;
     controls.startAndPauseButton.innerText =
@@ -36,6 +45,11 @@ const initBackgroundMusic = () => {
     handleTimer(buttonInnerText);
   });
 
+  controls.resteButton.addEventListener("click", () => {
+    const resteButtonText = controls.resteButton.innerText;
+    controls.startAndPauseButton.innerText = "play";
+    handleTimer(resteButtonText);
+  });
   controls.backgroundMusic.addEventListener("click", togglePlayState);
 };
 
