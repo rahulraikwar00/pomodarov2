@@ -1,4 +1,4 @@
-import { createOffscreenDocument, hasOffscreenDocument } from "./utills";
+import { createOffscreenDocument, hasOffscreenDocument } from "./utils";
 import { localStorage } from "./localstorage";
 
 const path = "offscreen.html";
@@ -34,4 +34,3 @@ const createOffscreenDocumentIFNecessary = async () => {
     console.error("Error creating offscreen document:", error);
   }
 };
-
