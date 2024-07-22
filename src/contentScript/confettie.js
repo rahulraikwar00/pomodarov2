@@ -17,29 +17,65 @@ function randomInRange(min, max) {
  * @param {number} duration - The duration of the confetti animation in milliseconds.
  */
 function playConfettiAnimation(duration) {
-  const animationEnd = Date.now() + duration;
-  const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+  // const animationEnd = Date.now() + duration;
+  // const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
-  const interval = setInterval(() => {
-    const timeLeft = animationEnd - Date.now();
+  // const interval = setInterval(() => {
+  //   const timeLeft = animationEnd - Date.now();
 
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      return;
-    }
+  //   if (timeLeft <= 0) {
+  //     clearInterval(interval);
+  //     return;
+  //   }
 
-    const particleCount = 50 * (timeLeft / duration);
+  //   const particleCount = 50 * (timeLeft / duration);
+  //   confetti({
+  //     ...defaults,
+  //     particleCount,
+  //     origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+  //   });
+  //   confetti({
+  //     ...defaults,
+  //     particleCount,
+  //     origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+  //   });
+  // }, 250);
+
+  var count = 200;
+  var defaults = {
+    origin: { y: 0.7 },
+  };
+
+  function fire(particleRatio, opts) {
     confetti({
       ...defaults,
-      particleCount,
-      origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+      ...opts,
+      particleCount: Math.floor(count * particleRatio),
     });
-    confetti({
-      ...defaults,
-      particleCount,
-      origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-    });
-  }, 250);
+  }
+
+  fire(0.25, {
+    spread: 26,
+    startVelocity: 55,
+  });
+  fire(0.2, {
+    spread: 60,
+  });
+  fire(0.35, {
+    spread: 100,
+    decay: 0.91,
+    scalar: 0.8,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 25,
+    decay: 0.92,
+    scalar: 1.2,
+  });
+  fire(0.1, {
+    spread: 120,
+    startVelocity: 45,
+  });
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {

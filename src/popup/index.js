@@ -2,7 +2,7 @@ import "./index.css";
 import { togglePlayState } from "../audioManager";
 import { localStorage } from "../localstorage";
 import { playConfetti } from "../contentScript/confettie";
-import { updateDisplayfromMessage } from "../utils";
+import { updateDisplayfromMessage, updateTimerValue } from "../utils";
 
 const initBackgroundMusic = () => {
   const controls = {
@@ -10,13 +10,6 @@ const initBackgroundMusic = () => {
     startAndPauseButton: document.getElementById("startAndPause"),
     resteButton: document.getElementById("resetbutton"),
   };
-
-  chrome.runtime.onMessage.addListener((request) => {
-    if (request.type === "timerUpdate") {
-      updateDisplayfromMessage(request.payload);
-    }
-    return true;
-  });
 
   chrome.storage.local.get("timer", (result) => {
     updateDisplayfromMessage(result.timer.time);
@@ -98,4 +91,14 @@ document.addEventListener("DOMContentLoaded", () => {
     `url(${chrome.runtime.getURL("img/girl.gif")})`
   );
   initBackgroundMusic();
+
+  updateTimer();
 });
+
+function updateTimer() {
+  setInterval(() => {
+    chrome.storage.local.get("timer", (result) => {
+      updateDisplayfromMessage(result.timer.time);
+    });
+  }, 500);
+}

@@ -29,7 +29,7 @@ const saveConfigs = async (configs) => localStorage.set(configs, logConfigsSet);
 
 const logStorageValue = () =>
   chrome.storage.local.get((result) => {
-    console.log("Timer value:", result);
+    // console.log("Timer value:", result);
   });
 
 chrome.runtime.onInstalled.addListener(onInstalled);
@@ -56,8 +56,8 @@ class Timer {
       const configs = await this.getConfigs();
       this.timer = configs?.timer?.time || 0;
       this.stateType = configs?.timer?.stateType || TIMER_STATE.STOPPED;
-      // this.setupAlarm();
-      // this.updateDisplay();
+      this.setupAlarm();
+      this.updateDisplay();
     } catch (error) {
       console.error("Error initializing timer:", error);
     }
@@ -82,8 +82,8 @@ class Timer {
   handleAlarm(alarm) {
     if (this.stateType === TIMER_STATE.RUNNING) {
       this.timer -= 1;
-      console.log("timer:", this.timer);
       if (this.timer < 0) {
+        this.clearAlarm();
         this.timer = 1500;
         this.stateType = TIMER_STATE.STOPPED;
       }
@@ -117,18 +117,6 @@ class Timer {
   }
 
   updateDisplay() {
-    try {
-      chrome.runtime.sendMessage({ type: "timerUpdate", payload: this.timer });
-    } catch (error) {
-      if (chrome.runtime.lastError) {
-        console.warn(
-          "Could not send message:",
-          chrome.runtime.lastError.message
-        );
-      } else {
-        console.error("Unexpected error:", error);
-      }
-    }
     updateTimerValue(this.timer);
   }
 
@@ -161,7 +149,9 @@ class Timer {
         if (this.stateType === TIMER_STATE.PAUSED) {
           this.resumeTimer();
         } else {
-          this.startTimer(1500);
+          chrome.storage.local.get("timer", (result) => {
+            this.startTimer(result.timer.time);
+          });
         }
       } else if (request.payload === "pause") {
         this.pauseTimer();
@@ -190,5 +180,19 @@ chrome.runtime.onMessage.addListener((request) => {
 
 chrome.alarms.onAlarm.addListener((alarm) => {
   timer.handleAlarm(alarm);
-  console.log("Alarm triggered");
+  // console.log("Alarm triggered");
 });
+
+const sendMessageToCurrentTab = (message) => {
+  const confettiInterval = setInterval(() => {
+    console.log("sending messga for confetti");
+    chrome.tabs.query({ active: true }, (tabs) => {
+      if (tabs.length > 0) {
+        chrome.tabs.sendMessage(tabs[0].id, message, () => {});
+      }
+    });
+  }, 1500);
+  setTimeout(() => {
+    clearInterval(confettiInterval);
+  }, 10000);
+};
