@@ -1,16 +1,14 @@
-
-/* @import url('https://fonts.googleapis.com/css2?family=Margarine:wght@400;700&display=swap');
-@import url('https://use.fontawesome.com/releases/v5.15.4/css/all.css');
+@import url("https://fonts.googleapis.com/css2?family=Margarine:wght@400;700&display=swap");
+@import url("https://use.fontawesome.com/releases/v5.15.4/css/all.css");
 
 body {
   width: 150px;
   background-color: #fff;
-  font-family: 'Margarine', sans-serif;
+  font-family: "Margarine", sans-serif;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
 }
 
 #title,
@@ -48,7 +46,7 @@ body {
   color: #333;
   border: none;
   border-radius: 5px;
-  font-family: 'Margarine', sans-serif;
+  font-family: "Margarine", sans-serif;
   font-weight: 400;
   box-shadow: #000 1px 1px 2px;
   transition:
@@ -81,4 +79,11 @@ body {
   100% {
     opacity: 1;
   }
-} */
+}
+
+.playIcon {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='green' d='M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM9.55 18.82L12 16.38L14.45 18.82L12 21.25Z' /></svg>") !important;
+}
+.pauseIcon {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'><path fill='red' d='M6 22h4V2H6v20zm12-2h4V2h-4v20z' /></svg>") !important;
+}

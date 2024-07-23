@@ -92,6 +92,13 @@ class Timer {
     }
   }
 
+  updateBadge() {
+    const minutes = Math.floor(this.timer / 60);
+    const seconds = this.timer % 60;
+    chrome.action.setBadgeText({
+      text: `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+    });
+  }
   startTimer(time) {
     this.clearAlarm();
     this.timer = time;
@@ -117,6 +124,7 @@ class Timer {
   }
 
   updateDisplay() {
+    this.updateBadge();
     updateTimerValue(this.timer);
   }
 

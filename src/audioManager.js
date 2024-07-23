@@ -1,9 +1,8 @@
 import { createOffscreenDocument, hasOffscreenDocument } from "./utils";
-import { localStorage } from "./localstorage";
 
 const path = "offscreen.html";
 
-export const togglePlayState = async () => {
+export const togglePlayState = async (selectedStation) => {
   try {
     let offscreenAvailable = await hasOffscreenDocument(path);
 
@@ -14,9 +13,15 @@ export const togglePlayState = async () => {
 
     if (offscreenAvailable) {
       const isPlaying = backgroundMusic.innerText === "pause";
-      chrome.runtime.sendMessage(isPlaying ? "pause" : "play");
+      chrome.runtime.sendMessage({
+        type: "audioController",
+        payload: {
+          selectedStation: selectedStation,
+          isPlaying: !isPlaying,
+        },
+      });
       backgroundMusic.innerText = isPlaying ? "play" : "pause";
-      localStorage.set({ sound: { state: !isPlaying } });
+      // localStorage.set({ sound: { state: !isPlaying } });
     }
   } catch (error) {
     console.error("Error handling background music:", error);

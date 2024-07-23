@@ -2,7 +2,7 @@ import "./index.css";
 import { togglePlayState } from "../audioManager";
 import { localStorage } from "../localstorage";
 import { playConfetti } from "../contentScript/confettie";
-import { updateDisplayfromMessage, updateTimerValue } from "../utils";
+import { updateDisplayfromMessage } from "../utils";
 
 const initBackgroundMusic = () => {
   const controls = {
@@ -43,7 +43,10 @@ const initBackgroundMusic = () => {
     controls.startAndPauseButton.innerText = "play";
     handleTimer(resteButtonText);
   });
-  controls.backgroundMusic.addEventListener("click", togglePlayState);
+  controls.backgroundMusic.addEventListener("click", () => {
+    const selectedPlayStation = selectElement.value;
+    togglePlayState(selectedPlayStation);
+  });
 };
 
 const setButtonStateFromLocalStorage = (
@@ -101,4 +104,38 @@ function updateTimer() {
       updateDisplayfromMessage(result.timer.time);
     });
   }, 500);
+}
+
+const stationNames = [
+  "Lofi 24/7",
+  "Planet LoFi",
+  "ChillHop",
+  "Chillsky",
+  "RauteMusik FM Study",
+  "I Love Chillhop",
+  "Radio Record Lo-Fi",
+];
+
+const selectElement = document.createElement("select");
+stationNames.forEach((station) => {
+  const optionElement = document.createElement("option");
+  optionElement.textContent = station;
+  selectElement.appendChild(optionElement);
+});
+const lofiCard = document.getElementById("lofiCard");
+lofiCard.appendChild(selectElement);
+
+// ##################################################
+// experimental code
+// #############################################333##
+
+function togglePlayIcon(playState) {
+  const playButton = document.getElementById("startAndPause");
+  if (playState) {
+    playButton.classList.add("playIcon");
+    playButton.classList.remove("pauseIcon");
+  } else {
+    playButton.classList.add("pauseIcon");
+    playButton.classList.remove("playIcon");
+  }
 }

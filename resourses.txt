@@ -1,0 +1,125 @@
+for stream 24/7 lofi and other
+
+const freeStations = [{
+    name: "Lofi 24/7",
+    uri: "https://usa9.fastcast4u.com/proxy/jamz?mp=/1",
+    image: chrome.runtime.getURL("images/stations/station5.png"),
+    gif: "https://media0.giphy.com/media/dvreHY4p06lzVSDrvj/giphy.gif"
+}]
+  , stations = [...freeStations, {
+    name: "Planet LoFi",
+    uri: "http://198.245.60.88:8080/stream",
+    image: chrome.runtime.getURL("images/stations/station1.png"),
+    gif: chrome.runtime.getURL("images/stations/station1.gif")
+}, {
+    name: "ChillHop",
+    uri: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/",
+    image: chrome.runtime.getURL("images/stations/station6.jpg"),
+    gif: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjBkbHc5ejB3dTI3MnNjYXlydjVkanNtMnd1NDQwbDV3OG03bml4YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/H62NM1ab7wzMXURdoi/giphy.gif"
+}, {
+    name: "Chillsky",
+    uri: "https://lfhh.radioca.st/stream",
+    image: chrome.runtime.getURL("images/stations/station2.png"),
+    gif: "https://media0.giphy.com/media/MU56lYT1Ov07fVTsnM/giphy.gif"
+}, {
+    name: "RauteMusik FM Study",
+    uri: "http://de-hz-fal-stream07.rautemusik.fm/study",
+    image: chrome.runtime.getURL("images/stations/station3.png"),
+    gif: "https://media0.giphy.com/media/XbJYBCi69nyVOffLIU/giphy.gif"
+}, {
+    name: "I Love Chillhop",
+    uri: "https://streams.ilovemusic.de/iloveradio17.mp3",
+    image: chrome.runtime.getURL("images/stations/station8.jpg"),
+    gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzg4aDBmb2hucnR4N3MzMWF1cjE0dWtkMmxyZDNsNHhqc2htbHluOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WTiJwq5cEY1gsRHJt9/giphy.gif"
+}, {
+    name: "Radio Record Lo-Fi",
+    uri: "https://radiorecord.hostingradio.ru/lofi96.aacp",
+    image: chrome.runtime.getURL("images/stations/station7.jpg"),
+    gif: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3plNGtidXl2cjgyZDVqMWQxeGZ2eHFqc2c5ZXpuY3pjbGt6dHl4cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LzinRMeoxdpAt6w2n7/giphy.gif"
+}];
+
+
+
+
+###########################################################
+##############################################################33
+###############################################################
+
+code for audio plying 
+
+
+################################################################3
+################################################################3
+
+const audioElement = document.createElement("audio");
+document.body.appendChild(audioElement);
+
+const stations = [
+  {
+    name: "Lofi 24/7",
+    uri: "https://usa9.fastcast4u.com/proxy/jamz?mp=/1",
+    gif: "https://media0.giphy.com/media/dvreHY4p06lzVSDrvj/giphy.gif",
+  },
+  {
+    name: "Planet LoFi",
+    uri: "http://198.245.60.88:8080/stream",
+    gif: "https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExcjBkbHc5ejB3dTI3MnNjYXlydjVkanNtMnd1NDQwbDV3OG03bml4YiZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/H62NM1ab7wzMXURdoi/giphy.gif",
+  },
+  {
+    name: "ChillHop",
+    uri: "https://streams.fluxfm.de/Chillhop/mp3-320/streams.fluxfm.de/",
+    gif: "https://media0.giphy.com/media/MU56lYT1Ov07fVTsnM/giphy.gif",
+  },
+  {
+    name: "Chillsky",
+    uri: "https://lfhh.radioca.st/stream",
+    gif: "https://media0.giphy.com/media/XbJYBCi69nyVOffLIU/giphy.gif",
+  },
+  {
+    name: "RauteMusik FM Study",
+    uri: "http://de-hz-fal-stream07.rautemusik.fm/study",
+    gif: "https://media0.giphy.com/media/XbJYBCi69nyVOffLIU/giphy.gif",
+  },
+  {
+    name: "I Love Chillhop",
+    uri: "https://streams.ilovemusic.de/iloveradio17.mp3",
+    gif: "https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExZzg4aDBmb2hucnR4N3MzMWF1cjE0dWtkMmxyZDNsNHhqc2htbHluOSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/WTiJwq5cEY1gsRHJt9/giphy.gif",
+  },
+  {
+    name: "Radio Record Lo-Fi",
+    uri: "https://radiorecord.hostingradio.ru/lofi96.aacp",
+    gif: "https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExa3plNGtidXl2cjgyZDVqMWQxeGZ2eHFqc2c5ZXpuY3pjbGt6dHl4cSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/LzinRMeoxdpAt6w2n7/giphy.gif",
+  },
+];
+
+const selectElement = document.createElement("select");
+stations.forEach((station) => {
+  const optionElement = document.createElement("option");
+  optionElement.textContent = station.name;
+  selectElement.appendChild(optionElement);
+});
+document.body.appendChild(selectElement);
+
+const playButton = document.createElement("button");
+playButton.textContent = "Play";
+document.body.appendChild(playButton);
+
+let isPlaying = false;
+let isLoading = false;
+playButton.addEventListener("click", () => {
+  isPlaying = !isPlaying;
+  if (isPlaying) {
+    playButton.textContent = "Loading...";
+    isLoading = true;
+    audioElement.src = stations[selectElement.selectedIndex].uri;
+    audioElement.play().then(() => {
+      isLoading = false;
+      if (isPlaying) {
+        playButton.textContent = "Pause";
+      }
+    });
+  } else {
+    audioElement.pause();
+    playButton.textContent = "Play";
+  }
+});
