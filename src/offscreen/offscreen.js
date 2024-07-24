@@ -44,26 +44,27 @@ let audioStation = "Lofi 24/7";
 audioElement.src = stations.find(
   (station) => station.name === audioStation
 ).uri;
-
 chrome.runtime.onMessage.addListener((message) => {
-  console.log(message);
-  if (message.type == "audioController") {
-    audioStation = message.payload.selectedStation;
-    switch (message.payload.isPlaying) {
-      case true:
-        audioElement.src = stations.find(
-          (station) => station.name === audioStation
-        ).uri;
-        audioElement.play();
-        break;
-      case false:
-        audioElement.pause();
-        break;
-      default:
-        audioElement.src = stations.find(
-          (station) => station.name === audioStation
-        ).uri;
-        audioElement.play();
-    }
+  console.log("[controller]: received", message);
+
+  switch (message.type) {
+    case "updateStation":
+      const audioStation = message.payload.selectedStation;
+      audioElement.src = stations.find(
+        (station) => station.name === audioStation
+      ).uri;
+      console.log("audio station updated and now playing", audioStation);
+      audioElement.play();
+      break;
+    case "play":
+      audioElement.play();
+      break;
+    case "pause":
+      audioElement.pause();
+      break;
+    default:
+      console.warn(`Unknown message type: ${message.type}`);
   }
+
+  return true;
 });
