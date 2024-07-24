@@ -60,14 +60,6 @@ export async function updateDisplay() {
   }
 }
 
-export function updateDisplayfromMessage(currTime) {
-  const time = currTime;
-  const minutes = Math.floor(time / 60);
-  const seconds = time % 60;
-  const timerDisplay = document.getElementById("timer");
-  timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-}
-
-export function logConfigsSet() {
+export function logConfigsSet(result) {
   console.log("Configs set successfully");
 }

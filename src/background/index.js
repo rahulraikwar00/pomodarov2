@@ -6,13 +6,12 @@ import {
 import { localStorage, setupStorageConfig } from "../localstorage";
 
 const onInstalled = async () => {
-  const { path, reason, justification, configs } =
-    getOffscreenDocumentCreationData();
+  const { path, reason, justification } = getOffscreenDocumentCreationData();
 
   await clearStorage();
   await clearAllAllarms();
   await createOffscreenDocument(path, reason, justification);
-  await saveConfigs(configs);
+  await saveConfigs(setupStorageConfig());
   await logStorageValue();
 };
 
@@ -20,12 +19,16 @@ const getOffscreenDocumentCreationData = () => ({
   path: "offscreen.html",
   reason: "AUDIO_PLAYBACK",
   justification: "for playing audio",
-  configs: setupStorageConfig(),
 });
 
 const clearStorage = () => chrome.storage.local.clear();
 const clearAllAllarms = () => chrome.alarms.clearAll();
-const saveConfigs = async (configs) => localStorage.set(configs, logConfigsSet);
+const saveConfigs = async (configs) => {
+  await chrome.storage.local.set(configs);
+  await chrome.storage.local.get((result) => {
+    logConfigsSet(configs);
+  });
+};
 
 const logStorageValue = () =>
   chrome.storage.local.get((result) => {
@@ -92,6 +95,13 @@ class Timer {
     }
   }
 
+  updateBadge() {
+    const minutes = Math.floor(this.timer / 60);
+    const seconds = this.timer % 60;
+    chrome.action.setBadgeText({
+      text: `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`,
+    });
+  }
   startTimer(time) {
     this.clearAlarm();
     this.timer = time;
@@ -117,6 +127,7 @@ class Timer {
   }
 
   updateDisplay() {
+    this.updateBadge();
     updateTimerValue(this.timer);
   }
 
