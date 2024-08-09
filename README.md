@@ -4,14 +4,14 @@
 
 1. Ensure your `Node.js` version is >= _14_.
 2. clone the repo
-3. Run `cd pomoji` to change directory
+3. Run `cd pomodarov2` to change directory
 4. Run `npm install` to install the dependencies.
 5. Run `npm run build` to build the extention
 
 ## Setup Extension
 
 1. Enable 'Developer mode' in your Chrome browser.
-2. Click 'Load unpacked' and select the `pomoji/build` folder.
+2. Click 'Load unpacked' and select the `pomodarov2/build` folder.
 
 ### Features
 
@@ -24,7 +24,7 @@
 1. Click the Pomoji icon in your Chrome toolbar.
 2. Set your desired Pomodoro or focus session duration in option page by right click to see options .
 3. Start the timer and enjoy your productive session with the animated buddy.
-4. toggle background music and animation as you wish
+4. toggle background music or change the station with the drop-down list as you wish
 
 ### Contributing
 
