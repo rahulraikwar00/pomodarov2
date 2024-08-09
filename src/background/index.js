@@ -3,7 +3,7 @@ import {
   logConfigsSet,
   updateTimerValue,
 } from "../utils";
-import { localStorage, setupStorageConfig } from "../localstorage";
+import { setupStorageConfig } from "../localstorage";
 
 const onInstalled = async () => {
   const { path, reason, justification } = getOffscreenDocumentCreationData();
@@ -68,7 +68,7 @@ class Timer {
 
   async getConfigs() {
     try {
-      const result = await localStorage.get("timer");
+      const result = await chrome.storage.local.get("timer");
       return result;
     } catch (error) {
       console.error("Error retrieving timer configs:", error);
@@ -132,19 +132,15 @@ class Timer {
   }
 
   updateStorage() {
-    localStorage
-      .set({
-        timer: {
-          time: this.timer,
-          stateType: this.stateType,
-        },
-      })
-      .then(() => {
-        // console.log("Timer state updated successfully");
-      })
-      .catch((error) => {
-        console.error("Error updating timer state:", error);
+    chrome.storage.local.get("timer", (result) => {
+      let timerData = result.timer;
+      timerData.time = this.timer;
+      console.log("Timer data is :", timerData);
+      timerData.stateType = this.stateType;
+      chrome.storage.local.set({ timer: timerData }, () => {
+        console.log("Updated timer in storage");
       });
+    });
   }
 
   clearAlarm() {
