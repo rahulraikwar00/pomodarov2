@@ -4,10 +4,35 @@
     <meta charset="UTF-8" />
     <link rel="icon" href="/icons/logo.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chrome Extension + Vanilla + JS + Vite</title>
+    <title>Customize Timer Duration</title>
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app">
+      <h1>Customize your Pomodoro timer duration</h1>
+      <p>
+        You can adjust the duration of your Pomodoro timer by changing the value
+        of the range input. The minimum duration is 1 minute, and the maximum is
+        60 minutes.
+      </p>
+      <label for="durationInput">Duration (min):</label>
+      <div style="display: flex; align-items: center">
+        <input
+          id="rangeInput"
+          type="range"
+          min="1"
+          max="60"
+          step="1"
+          value="30"
+        />
+        <span id="durationValue">loading...</span>
+      </div>
+      <button id="setButton">Set Duration</button>
+      <p>
+        By default, the duration is set to 30 minutes. When you click the "Set
+        Duration" button, the new duration will be saved in your browser and
+        will be used the next time you start a Pomodoro timer.
+      </p>
+    </div>
     <script type="module" src="/src/options/index.js"></script>
   </body>
 </html>
