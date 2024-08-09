@@ -66,6 +66,14 @@ class Timer {
     }
   }
 
+  playConfetti() {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0]) {
+        chrome.tabs.sendMessage(tabs[0].id, { type: "playConfetti" });
+      }
+    });
+  }
+
   async getConfigs() {
     try {
       const result = await chrome.storage.local.get("timer");
@@ -89,6 +97,7 @@ class Timer {
         this.clearAlarm();
         this.timer = 1500;
         this.stateType = TIMER_STATE.STOPPED;
+        this.playConfetti();
       }
       this.updateDisplay();
       this.updateStorage();

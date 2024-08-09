@@ -1,8 +1,9 @@
 import confetti from "canvas-confetti";
 
-function playConfettiAnimation(duration) {
-  var count = 200;
-  var defaults = {
+console.log("confettie script loaded");
+function playConfettiAnimation() {
+  let count = 200;
+  let defaults = {
     origin: { y: 0.7 },
   };
 
@@ -39,23 +40,14 @@ function playConfettiAnimation(duration) {
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  // console.log('message in confettiScript:', request)
-  if (request.type === "playConfetti") {
-    playConfettiAnimation(3 * 1000); // 15 seconds duration
-    sendResponse({ success: true });
-  } else {
-    sendResponse({ success: false });
-  }
-  return true;
-});
-
-/**
- * Sends a message to the active tab to play the confetti animation.
- */
-export function playConfetti() {
-  chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-    if (tabs[0]) {
-      chrome.tabs.sendMessage(tabs[0].id, { type: "playConfetti" });
+  try {
+    if (request.type === "playConfetti") {
+      playConfettiAnimation();
+      sendResponse({ success: true });
     }
-  });
-}
+    return true;
+  } catch (error) {
+    console.log(error);
+    return true;
+  }
+});
