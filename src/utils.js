@@ -1,5 +1,3 @@
-import { localStorage } from "./localstorage";
-
 export async function createOffscreenDocument(urlPath, reason, justification) {
   try {
     const offscreenDocument = await chrome.offscreen.createDocument({
@@ -30,14 +28,11 @@ export async function hasOffscreenDocument(urlPath) {
 
 export async function updateTimerValue(newTime) {
   try {
-    const timerData = localStorage.get("timer");
-    if (timerData) {
-      timerData.time = newTime;
-      localStorage.set({ timer: timerData });
-      // console.log("Time value updated successfully");
-    } else {
-      console.error("Timer configuration not found");
-    }
+    let timerData = chrome.storage.local.get("timer");
+    timerData = await timerData;
+    console.log("Timer data is :", timerData.timer);
+    timerData.timer.time = newTime;
+    chrome.storage.local.set({ timer: timerData.timer });
   } catch (error) {
     console.error("Error storing timer in storage:", error);
   }
@@ -45,16 +40,14 @@ export async function updateTimerValue(newTime) {
 
 export async function updateDisplay() {
   try {
-    const timerData = localStorage.get("timer");
-    if (timerData) {
-      const time = timerData.time;
+    const timerData = chrome.storage.local.get("timer");
+    timerData.then((result) => {
+      const time = result.timer.time;
       const minutes = Math.floor(time / 60);
       const seconds = time % 60;
       const timerDisplay = document.getElementById("timer");
       timerDisplay.innerText = `${minutes.toString().padStart(2, "0")}:${seconds.toString().padStart(2, "0")}`;
-    } else {
-      console.error("Timer configuration not found");
-    }
+    });
   } catch (error) {
     console.error("Error retrieving timer from storage:", error);
   }
