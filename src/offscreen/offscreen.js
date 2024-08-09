@@ -63,7 +63,7 @@ chrome.runtime.onMessage.addListener((message) => {
       audioElement.pause();
       break;
     default:
-      console.warn(`Unknown message type: ${message.type}`);
+      console.log(`Unknown message type: ${message.type}`);
   }
 
   return true;
